@@ -6,7 +6,7 @@
 </template>
 
 <script>export default {
-    name: 'MiComponente', // cambiá el nombre si querés  
+    name: 'Login', // cambiá el nombre si querés  
     
     components: {
 

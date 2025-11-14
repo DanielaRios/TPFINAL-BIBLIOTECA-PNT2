@@ -1,7 +1,61 @@
 
-   <section class="card">
-    <div class="card-header">
-        <h3>Componente Admin</h3>
-    </div>
+<div class="container-fluid mt-3">
+    <div class="card">
+      <div class="card-header">
+        <header>
+          <h2>Panel Libros</h2>
+        </header>
+      </div>
 
-    </section>
+      <div class="card-body">
+        <h4>Aca tiene estar el filtrado</h4>
+
+        <div v-if="libros.length">
+          <div class="table-responsive">
+            <table class="table table-secondary align-middle">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>TITULO</th>
+                  <th>AUTOR</th>
+                  <th>CATEGORÍA</th>
+                  <th>AÑO</th>
+                  <th>STOCK</th>
+                  <th>DISPONIBLE</th>
+                  <th>FOTO</th>
+                  <th>DESCRIPCIÓN</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(libro, index) in libros" :key="libro.id">
+                  <td>{{ index + 1 }}</td>
+                  <td><b>{{ libro.titulo }}</b></td>
+                  <td><b>{{ libro.autor }}</b></td>
+                  <td>{{ libro.categoria }}</td>
+                  <td>{{ libro.anio }}</td>
+                  <td>{{ libro.stock }}</td>
+                  <td>
+                    {{ libro.disponibilidad ? 'Sí' : 'No' }}
+                  </td>
+                  <td>
+                    <img
+                      :src="libro.foto"
+                      alt="Portada"
+                      style="width: 40px; height: 60px; object-fit: cover"
+                    />
+                  </td>
+                  <td class="text-truncate" style="max-width: 250px">
+                    {{ libro.descripcion }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <h4 v-else class="alert alert-secondary">
+          Cargando libros desde MockAPI...
+        </h4>
+      </div>
+    </div>
+  </div>
