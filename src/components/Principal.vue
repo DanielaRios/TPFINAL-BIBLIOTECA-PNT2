@@ -2,15 +2,19 @@
     <div class="componente">
         <h2>Principal</h2>
         
+        <LibroCard></LibroCard>
     </div>
 
 </template>
 
-<script>export default {
-    name: 'MiComponente', // cambiá el nombre si querés  
+<script>
+import LibroCard from './LibroCard.vue';
+
+export default {
+    name: 'Principal', // cambiá el nombre si querés  
     
     components: {
-
+        LibroCard
     },
     props: {
 
