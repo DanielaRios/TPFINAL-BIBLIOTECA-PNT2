@@ -2,12 +2,12 @@
     <div class="componente">
         <h2>Principal</h2>
         
-        <div class="lista-libros">
-            <LibroCard 
-                v-for="libro in libros"
-                :key="libro.id"
-                :libro="libro"
-            />
+       <div class="container mt-4">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+                <div class="col" v-for="libro in libros" :key="libro.id">
+                <LibroCard :libro="libro" />
+                </div>
+            </div>
         </div>
     </div>
 
@@ -53,5 +53,7 @@ export default {
 
 
 <style scoped>
-
+.componente{
+    background-color: #F8F8F8;
+}
 </style>
