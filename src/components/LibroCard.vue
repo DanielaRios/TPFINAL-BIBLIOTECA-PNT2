@@ -2,19 +2,20 @@
     <div class="componente">
 
         <div class="card" style="width: 18rem;">
-            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgkZUtSGCNDWFkOXL5nASWXJHBLCQcXx64oYObbYDRvGb3z4Ahjm8B7L3rDZ1DC3cI331hFg7ujkHmqtYQ3Z8TFR7MjJsyUxE3mpL_KtDN8yfCgbZxKWwiputIUbwJXRfrAanfUAPtOEw/w1200-h630-p-k-no-nu/1984.jpg" class="card-img-top" alt="portada del libro">
+            <!-- <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgkZUtSGCNDWFkOXL5nASWXJHBLCQcXx64oYObbYDRvGb3z4Ahjm8B7L3rDZ1DC3cI331hFg7ujkHmqtYQ3Z8TFR7MjJsyUxE3mpL_KtDN8yfCgbZxKWwiputIUbwJXRfrAanfUAPtOEw/w1200-h630-p-k-no-nu/1984.jpg" class="card-img-top" alt="portada del libro"> -->
+            <img :src="libro.foto" class="card-img-top" style="height: 27rem; object-fit: cover;" alt="portada del libro">
             <div class="card-body">
-                <h5 class="card-title">{{ titulo }}</h5>
+                <h5 class="card-title">{{ libro.titulo }}</h5>
                 <div class="container card-text">
                     <div class="row">
-                        <div class="col-12"><p>{{ autor }}</p></div>
+                        <div class="col-12"><p>{{ libro.autor }}</p></div>
                     </div>
                     <div class="row">
-                        <div class="col-9"><p>{{ genero }}</p></div>
-                        <div class="col-3"><p>{{ anio }}</p></div>
+                        <div class="col-9"><p>{{ libro.categoria }}</p></div>
+                        <div class="col-3"><p>{{ libro.anio }}</p></div>
                     </div>
                     <div class="row">
-                        <div><span class="badge rounded-pill bg-dark mb-2">Stock: {{ stock }}</span></div> 
+                        <div><span class="badge rounded-pill bg-dark mb-2">Stock: {{ libro.stock }}</span></div> 
                     </div>
                     <div class="row">
                         <div class="col-12 d-grid"><button class="btn btn-primary" @click="alquilar" :disabled="chequearStock">Alquilar</button></div>  
