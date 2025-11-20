@@ -1,22 +1,7 @@
 <template>
-  <div class="container-fluid mt-3">
-    <div class="card">
-      <div class="card-header">
-        <header>
-          <h2>BIBLIOTECA LECTIA</h2>
-        </header>
-      </div>
-
-      <div class="card-body">
-        <main>
-          
-          <Navbar />
-          <RouterView />
-
-
-        </main>
-      </div>
-    </div>
+  <div class="">
+    <Navbar />
+    <RouterView />
   </div>
 </template>
 
