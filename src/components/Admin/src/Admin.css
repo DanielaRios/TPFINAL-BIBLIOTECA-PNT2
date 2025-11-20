@@ -1,0 +1,22 @@
+/* Encabezado oscuro */
+.tabla-libros thead {
+  background-color: #1A1F2E;
+}
+
+.tabla-libros thead th {
+  background-color: #1A1F2E;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+
+/* Filas del cuerpo en gris claro */
+.tabla-libros tbody td {
+  background-color: #d8dce0;
+}
+
+ /*------------------------------------------------------*/
+
+.filtro-dropdown {
+  width: 100%;
+}

@@ -2,7 +2,7 @@ import ServicioLibros from "@/Servicios/libros";
 
 export default {
     name: 'Admin', // cambiá el nombre si querés  
-    
+
     components: {
 
     },
@@ -13,24 +13,31 @@ export default {
         return {
             servicioLibros: new ServicioLibros(),
             libros: [],
+            filtroCategoria: 'Todas',
+            filtroEstado: 'Todos',
 
         };
     },
     // Propiedades computadas  
     computed: {
-
-    },
-
-    // Métodos  
-    methods: {
-        async obtener() {
-            const libros = await this.servicioLibros.getAll()
-            this.libros = libros
+        filtroCategoriaMostrar() {
+            return this.filtroCategoria;
         },
-        
+        filtroEstadoMostrar() {
+            return this.filtroEstado;
+
+        },
     },
-     mounted() {
-    // se llama automáticamente cuando se monta el componente
-    this.obtener();
-  },
-} 
+        // Métodos  
+        methods: {
+            async obtener() {
+                const libros = await this.servicioLibros.getAll()
+                this.libros = libros
+            },
+
+        },
+        mounted() {
+            // se llama automáticamente cuando se monta el componente
+            this.obtener();
+        },
+    } 
