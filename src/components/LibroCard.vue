@@ -1,6 +1,6 @@
 <template>
     <div class="componente">
-        <div class="card my-2" style="width: 18rem;">
+        <div class="card" style="width: 18rem;">
             <!-- <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgkZUtSGCNDWFkOXL5nASWXJHBLCQcXx64oYObbYDRvGb3z4Ahjm8B7L3rDZ1DC3cI331hFg7ujkHmqtYQ3Z8TFR7MjJsyUxE3mpL_KtDN8yfCgbZxKWwiputIUbwJXRfrAanfUAPtOEw/w1200-h630-p-k-no-nu/1984.jpg" class="card-img-top" alt="portada del libro"> -->
             <img :src="libro.foto" class="card-img-top" style="height: 27rem; object-fit: cover;" alt="portada del libro">
             <div class="card-body">
