@@ -15,7 +15,7 @@
                 <ul class="navbar-nav">
 
                     <li class="nav-item">
-                        <RouterLink class="nav-link" to="/principal">Principal</RouterLink>
+                        <RouterLink class="nav-link" to="/principal">Catálogo</RouterLink>
                     </li>
                     <li class="nav-item">
                         <RouterLink class="nav-link" to="/login">Login</RouterLink>
