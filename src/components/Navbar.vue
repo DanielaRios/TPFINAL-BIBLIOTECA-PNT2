@@ -11,7 +11,7 @@
             </button>
 
             <!-- Items de navegación - opciones -->
-            <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
 
                     <li class="nav-item">
