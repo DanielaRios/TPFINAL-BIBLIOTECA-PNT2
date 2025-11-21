@@ -1,6 +1,9 @@
 <template>
-    <div class="componente">
-       <div class="container mt-4">
+    <div class="vista">
+        <div class="container my-4">
+            <div class="mb-4">
+                <h1>Catálogo de Libros</h1>
+            </div>
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
                 <div class="col" v-for="libro in libros" :key="libro.id">
                 <LibroCard :libro="libro" />
@@ -51,7 +54,5 @@ export default {
 
 
 <style scoped>
-.componente{
-    background-color: #F8F8F8;
-}
+
 </style>
