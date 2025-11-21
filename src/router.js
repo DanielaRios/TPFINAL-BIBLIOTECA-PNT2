@@ -21,6 +21,7 @@ const routes = [
     { path: '/admin', component: Admin },
     { path: '/user', component: User },
 
+
     /* ---- definición de las rutas no existentes ---- */
     { path: '/:pathmatch(.*)*', redirect: '/principal' },
 ]
