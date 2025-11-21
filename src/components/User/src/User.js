@@ -4,6 +4,9 @@ export default {
   name: 'User',
   data() {
     return {
+      usuarioActualID: '3',  // usuario
+      usuarioActualNombre: '',
+      usuarioActualApellido: '',
       prestamos: [],
       busqueda: '',
       estadoFiltro: '',
@@ -11,6 +14,8 @@ export default {
       pageSize: 5
     }
   },
+
+
   mounted() {
     axios.get('https://69167fd6a7a34288a27d8066.mockapi.io/api/Libros')
       .then(res => {
@@ -19,6 +24,20 @@ export default {
       .catch(err => {
         console.error('Error al cargar historial desde la API:', err)
       })
+
+      // Usuario 
+  axios.get(`https://69167fd6a7a34288a27d8066.mockapi.io/api/Usuario/${this.usuarioActualID}`) 
+    .then(res => {
+      console.log('Usuario cargado:', res.data)
+      this.usuarioActualID = res.data.id
+      this.usuarioActualNombre = res.data.nombre
+      this.usuarioActualApellido = res.data.apellido
+    })
+    .catch(err => {
+      console.error('Error al cargar usuario actual:', err)
+    })
+
+
   },
 
 
@@ -28,9 +47,11 @@ export default {
     prestamosFiltrados() {
       const q = this.busqueda.trim().toLowerCase()
       return this.prestamos
+        .filter(p => p.usuarioId === this.usuarioActualID)
         .filter(p => (this.estadoFiltro ? p.estado === this.estadoFiltro : true))
         .filter(p => p.titulo.toLowerCase().includes(q) || p.autor.toLowerCase().includes(q))
     },
+
     fromIndex() {
       return (this.page - 1) * this.pageSize
     },
@@ -41,6 +62,8 @@ export default {
       return this.prestamosFiltrados.slice(this.fromIndex, this.toIndex)
     }
   },
+
+
   methods: {
     formatDate(timestamp) {
       if (!timestamp) return 'No disponible'
@@ -56,4 +79,5 @@ export default {
       this.$router.push(`/libro/${p.id}`)
     }
   }
+  
 }
