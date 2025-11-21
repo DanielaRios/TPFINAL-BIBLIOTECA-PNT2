@@ -1,6 +1,6 @@
 <div class="container-fluid mt-3">
     <div class="card">
-        <div class="card-header">
+        <div class="card-header panel-libros-header">
             <header>
                 <h2>Panel Libros</h2>
             </header>
@@ -11,61 +11,67 @@
             <div class="card mb-3 filtro-card">
                 <div class="card-body">
                     <div class="row g-3 align-items-end">
-                        <!-- Buscar (Título/Autor) -->
-                        <div class="col-md-6">
+                        <!-- Izquierda: buscador + nuevo libro -->
+                        <div class="col-12 col-lg-7">
                             <label class="form-label fs-5"><strong>Buscar (Título/Autor)</strong></label>
-                            <input type="text" class="form-control" v-model="filtroTexto"
+                            <input type="text" class="form-control mb-2" v-model="filtroTexto"
                                 placeholder="Buscar libro..." />
-                        </div>
-                        <!-- Categoría -->
-                        <div class="col-md-1 col-sm-6">
-                            <label class="form-label fs-5"><strong>Categoría</strong></label>
 
-                            <div class="dropdown filtro-dropdown">
-                                <button class="btn btn-dark btn-lg dropdown-toggle filtro-btn" type="button" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    {{ filtroCategoriaMostrar }}
-                                </button>
-
-                                <ul class="dropdown-menu">
-                                    <li><button class="dropdown-item" @click="setCategoria('Todas')">Todas</button></li>
-                                    <li><button class="dropdown-item" @click="setCategoria('Ficción')">Ficción</button>
-                                    </li>
-                                    <li><button class="dropdown-item" @click="setCategoria('Ciencia')">Ciencia</button>
-                                    </li>
-                                    <li><button class="dropdown-item"
-                                            @click="setCategoria('Historia')">Historia</button></li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <!-- Estado -->
-                        <div class="col-md-1 col-sm-6">
-                            <label class="form-label fs-5"><strong>Estado</strong></label>
-
-                            <div class="dropdown filtro-dropdown">
-                                <button class="btn btn-dark btn-lg dropdown-toggle filtro-btn" type="button" data-bs-toggle="dropdown">
-                                    {{ filtroEstadoMostrar }}
-                                </button>
-
-                                <ul class="dropdown-menu">
-                                    <li><button class="dropdown-item" @click="setEstado('Todos')">Todos</button></li>
-                                    <li><button class="dropdown-item"
-                                            @click="setEstado('Disponible')">Disponible</button></li>
-                                    <li><button class="dropdown-item" @click="setEstado('NoDisponible')">No
-                                            disponible</button></li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <!-- Botones -->
-                        <div class="col-md-3 d-flex justify-content-end gap-3 mt-3 mt-md-0">
-                            <button class="btn btn-dark btn-lg" @click="aplicarFiltros">
-                                Filtrar
+                            <button class="btn btn-nuevo-libro btn-lg" @click="nuevoLibro">
+                                Nuevo Libro
                             </button>
-                            <button class="btn btn-outline-secondary btn-lg" @click="resetFiltros">
-                                Reset
-                            </button>
+                        </div>
+
+                        <!-- Derecha: categoría, estado y botones -->
+                        <div class="col-12 col-lg-5">
+                            <div class="row g-3 align-items-end">
+                                <!-- Categoría -->
+                                <div class="col-6">
+                                    <label class="form-label fs-5"><strong>Categoría</strong></label>
+                                    <div class="dropdown filtro-dropdown">
+                                        <button class="btn btn-dark btn-lg dropdown-toggle w-100" type="button"
+                                            data-bs-toggle="dropdown">
+                                            {{ filtroCategoriaMostrar }}
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><button class="dropdown-item"
+                                                    @click="setCategoria('Todas')">Todas</button></li>
+                                            <li><button class="dropdown-item"
+                                                    @click="setCategoria('Ficción')">Ficción</button></li>
+                                            <li><button class="dropdown-item"
+                                                    @click="setCategoria('Ciencia')">Ciencia</button></li>
+                                            <li><button class="dropdown-item"
+                                                    @click="setCategoria('Historia')">Historia</button></li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- Estado -->
+                                <div class="col-6">
+                                    <label class="form-label fs-5"><strong>Estado</strong></label>
+                                    <div class="dropdown filtro-dropdown">
+                                        <button class="btn btn-dark btn-lg dropdown-toggle w-100" type="button"
+                                            data-bs-toggle="dropdown">
+                                            {{ filtroEstadoMostrar }}
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><button class="dropdown-item" @click="setEstado('Todos')">Todos</button>
+                                            </li>
+                                            <li><button class="dropdown-item"
+                                                    @click="setEstado('Disponible')">Disponible</button></li>
+                                            <li><button class="dropdown-item" @click="setEstado('NoDisponible')">No
+                                                    disponible</button></li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- Botones Filtrar / Reset -->
+                                <div class="col-12 d-flex justify-content-end gap-2 mt-2">
+                                    <button class="btn btn-dark btn-lg" @click="aplicarFiltros">Filtrar</button>
+                                    <button class="btn btn-outline-dark btn-lg"
+                                        @click="resetFiltros">Reset</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -85,7 +91,7 @@
                                 <th>STOCK</th>
                                 <th>DISPONIBLE</th>
                                 <th>FOTO</th>
-                                <th>DESCRIPCIÓN</th>
+                                <th>ACCIONES</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -103,8 +109,13 @@
                                     <img :src="libro.foto" alt="Portada"
                                         style="width: 40px; height: 60px; object-fit: cover" />
                                 </td>
-                                <td class="text-truncate" style="max-width: 250px">
-                                    {{ libro.descripcion }}
+                                <td>
+                                    <button class="btn btn-dark me-2" @click="editarLibro(libro.id)">
+                                        Editar
+                                    </button>
+                                    <button class="btn btn-color-eliminar" @click="eliminarLibro(libro.id)">
+                                        Eliminar
+                                    </button>
                                 </td>
                             </tr>
                         </tbody>
