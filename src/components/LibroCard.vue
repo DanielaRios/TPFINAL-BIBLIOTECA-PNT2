@@ -27,6 +27,8 @@
 </template>
 
 <script>
+import { useUserStore } from '@/stores/usuario';
+
 export default {
     name: 'LibroCard', 
     
@@ -42,6 +44,7 @@ export default {
     },
     data() {
         return {
+            userStore: useUserStore(),
             imagen: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgkZUtSGCNDWFkOXL5nASWXJHBLCQcXx64oYObbYDRvGb3z4Ahjm8B7L3rDZ1DC3cI331hFg7ujkHmqtYQ3Z8TFR7MjJsyUxE3mpL_KtDN8yfCgbZxKWwiputIUbwJXRfrAanfUAPtOEw/w1200-h630-p-k-no-nu/1984.jpg',
             titulo: '1984',
             autor: 'George Orwell',
@@ -61,8 +64,13 @@ export default {
     // Métodos  
     methods: {
         alquilar(){
-            this.stock--
-        
+            if(!this.userStore.getLogeado){
+                this.$router.push('/login')
+            }else if(this.userStore.getAdmin){
+                Alert("Admin no puede alquilar")
+            }else{
+                this.stock--
+            }
         },
         
     },
