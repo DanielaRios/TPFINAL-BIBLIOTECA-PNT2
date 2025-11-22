@@ -1,11 +1,13 @@
 import ServicioLibros from "@/Servicios/libros";
 import FiltroLibros from '@/components/common/FiltroLibros.vue'
+import AdminUser from '@/components/AdminUser.vue'
 
 export default {
     name: 'Admin',
 
     components: {
-        FiltroLibros
+        FiltroLibros,
+        AdminUser
     },
 
     data() {
@@ -17,7 +19,9 @@ export default {
             librosFiltrados: [],
             filtroTexto: '',
             filtroCategoria: 'Todas',
-            filtroEstado: 'Todos'
+            filtroEstado: 'Todos',
+            vistaActiva: 'libros', // o 'usuarios' para Nav-underline
+
         };
     },
 
@@ -98,6 +102,10 @@ export default {
                     this.librosFiltrados.splice(indexFiltrado, 1)
                 }
             }
+        },
+        // Cambiar vista entre libros y usuarios Nav-underline
+        cambiarVista(vista) {
+            this.vistaActiva = vista
         }
     },
 

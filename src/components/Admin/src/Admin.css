@@ -41,4 +41,25 @@
 }
 
  /*------------------------------------------------------*/
+/* ---- Nav-underline Admin ---- */
+/* Nav personalizado del Admin */
+.admin-tabs .nav-link {
+    color: #464646;           /* texto blanco */
+    font-size: 1.35rem;                 /* tamaño más grande */
+    font-weight: 600;                  /* semi bold */
+    padding-bottom: 8px;               /* más espacio para el underline */
+}
+
+/* Hover */
+.admin-tabs .nav-link:hover {
+    color: #464646;         /* celestito al pasar el mouse */
+}
+
+/* Estado activo */
+.admin-tabs .nav-link.active {
+    color: #ffffff;         /* celeste más fuerte */
+    border-bottom: 3px solid #ffffff;  /* subrayado celeste */
+}
+
+
 
