@@ -17,13 +17,13 @@
                     <li class="nav-item">
                         <RouterLink class="nav-link" to="/principal">Catálogo</RouterLink>
                     </li>
-                    <li class="nav-item">
+                    <li v-if="!userStore.getLogeado" class="nav-item">
                         <RouterLink class="nav-link" to="/login">Login</RouterLink>
                     </li>
-                    <li class="nav-item">
+                    <li v-if="userStore.getAdmin" class="nav-item">
                         <RouterLink class="nav-link" to="/admin">Admin</RouterLink>
                     </li>
-                    <li class="nav-item">
+                    <li v-if="userStore.getLogeado && !userStore.getAdmin" class="nav-item">
                         <RouterLink class="nav-link" to="/user">Usuario</RouterLink>
                     </li>
                     
@@ -35,6 +35,8 @@
 </template>
 
 <script>
+import { useUserStore } from '@/stores/usuario';
+
 export default {
     name: 'Navbar', // cambiá el nombre si querés
 
@@ -51,6 +53,8 @@ export default {
     // Estado local
     data() {
         return {
+            userStore: useUserStore(),
+            user: null
         };
     },
 

@@ -16,6 +16,38 @@ class ServicioUsuarios {
             console.error('Error usuarios GET', error.message)
         }
     }
+
+    autenticacion = async (user, pass) => {
+        try { 
+            const { data: usuarios } = await this.getAll()
+            const userData = usuarios.find(
+                u => u.userName === user.trim() && u.password === pass
+             )
+            return  userData ?? null
+        }
+        catch (error) {
+            console.error('Error en autenticacion', error.message)
+        }
+    }
+
+    registrar = async (nuevoUsuario) => {
+        try {
+            const usuarios = await this.getAll()
+            const existe = usuarios.some(u => u.userName === nuevoUsuario.userName.trim())
+
+            if (existe) {
+                return { ok: false, msg: "El usuario ya existe" }
+            }
+
+            const { data } = await axios.post(this.#url, nuevoUsuario)
+
+            return { ok: true, data }
+        }
+        catch (error) {
+            console.error("Error en registrar", error.message)
+            return { ok: false, msg: "El usuario ya existe" + error.message }
+        }
+    }
 }
 
 export default ServicioUsuarios
