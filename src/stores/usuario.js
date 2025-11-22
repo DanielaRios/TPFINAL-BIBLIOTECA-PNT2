@@ -14,21 +14,24 @@ export const useUserStore = defineStore('usuario', {
     actions: {
         async login(user, pass){
             const userData = await this.servicioUsuarios.autenticacion(user, pass)
+            console.log(userData)
 
             if (!userData){
                 throw new Error("Credenciales incorrectas")
             }
-            this.user = userData
+            this.usuario = userData     
         },
         async register(nuevoUser){
             const userRegistro = await this.servicioUsuarios.registrar(nuevoUser)
             if(!userRegistro.ok){
                 throw new Error(userRegistro.msg)
             }
-            this.user = userRegistro.data
+            this.usuario = userRegistro.data
+            return true
         },
-        logou(){
-            this.user = null
+        logout(){
+            console.log("ADIOS")
+            this.usuario = null
         }
     }
 })

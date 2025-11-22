@@ -64,6 +64,8 @@ export default {
     // Métodos  
     methods: {
         alquilar(){
+            const user = this.userStore.getUsuario
+            console.log(user)
             if(!this.userStore.getLogeado){
                 this.$router.push('/login')
             }else if(this.userStore.getAdmin){

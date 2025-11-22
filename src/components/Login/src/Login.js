@@ -1,22 +1,20 @@
-<template>
-    <div class="componente">
-        <h2>Login</h2>
-    </div>
+import LoginForm from "../LoginForm.vue";
+import RegisterForm from "../RegisterForm.vue";
 
-</template>
-
-<script>
 export default {
+
     name: 'Login', // cambiá el nombre si querés  
     
     components: {
-
+        LoginForm,
+        RegisterForm
     },
     props: {
 
     },
     data() {
         return {
+            pantallaActual:"login"
 
         };
     },
@@ -30,9 +28,3 @@ export default {
         
     },
 } 
-</script>
-
-
-<style scoped>
-
-</style>
