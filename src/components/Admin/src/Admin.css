@@ -1,3 +1,16 @@
+/* ---- header ---- */
+
+/* Botón "Nuevo Libro" al 50% del ancho del buscador */
+.btn-nuevo-libro {
+  background-color: #1A1F2E;
+  color: white;
+  width: auto;      /* se ajusta al texto */
+  padding: 0.6rem 1.5rem; /* controlás el tamaño */
+  border-radius: 6px;
+  display: inline-block;
+}
+
+
 /* ---- Encabezado oscuro  tabla ---- */
 .panel-libros-header {
   background-color: #a64d79; 
@@ -28,53 +41,4 @@
 }
 
  /*------------------------------------------------------*/
-
-.filtro-dropdown {
-  width: 100%;
-}
-/* Ajustes suaves */
-.filtro-dropdown .btn { width: 100%; }
-@media (min-width: 992px) { /* lg */
-  .filtro-card .btn-lg { min-width: 110px; }
-}
-
-/* ---- Estilo general del bloque de filtros ---- */
-.filtro-card {
-  background-color: #f8f9fa; /* gris muy claro */
-  border-radius: 8px;
-}
-
-/* Espacios entre elementos del row */
-.filtro-card .row {
-  align-items: flex-end; /* alinea todos los campos abajo */
-}
-
-/* Input y botones con un poco de separación */
-.filtro-card input {
-  margin-bottom: 0.5rem;
-}
-
-
-/* Ajustes responsivos */
-@media (max-width: 991px) {
-  .filtro-card .btn {
-    width: 100%;
-  }
-}
-
-/* Botón "Nuevo Libro" al 50% del ancho del buscador */
-.btn-nuevo-libro {
-  background-color: #a64d79;
-  color: white;
-  width: 40%;
-  display: block;
-  margin: 0; /* lo centra debajo del input */
-}
-
-/* Aumentar la altura del campo de búsqueda */
-.filtro-card input.form-control {
-  height: 55px; /* podés ajustar: 50, 55 o 60px según te guste */
-  font-size: 1.1rem; /* agranda también el texto */
-  padding: 10px 14px; /* más espacio interno */
-}
 

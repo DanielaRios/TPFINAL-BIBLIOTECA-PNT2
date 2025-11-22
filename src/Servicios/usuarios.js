@@ -4,7 +4,7 @@ class ServicioUsuarios {
     #url = ''
 
     constructor() {
-        this.#url = 'https://69164899a7a34288a27cee7e.mockapi.io/api/Usuario'
+        this.#url = 'https://69164899a7a34288a27cee7e.mockapi.io/api/Usuario/'
     }
 
     getAll = async () => {
