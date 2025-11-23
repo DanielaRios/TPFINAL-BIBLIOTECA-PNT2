@@ -3,7 +3,7 @@ import { createRouter, createWebHistory } from "vue-router"
 
 // importo los componentes que van a ser las "vistas" de las rutas
 import Principal from "./components/Principal.vue"
-import Login from "./components/Login.vue"
+import Login from "./components/Login/index.vue"
 import Admin from "./components/Admin/index.vue"
 import User from "./components/User/index.vue"
 

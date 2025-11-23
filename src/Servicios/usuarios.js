@@ -18,11 +18,15 @@ class ServicioUsuarios {
     }
 
     autenticacion = async (user, pass) => {
+        console.log("usuario: "+ user)
+        console.log("password: "+ pass)
         try { 
-            const { data: usuarios } = await this.getAll()
+            const { data: usuarios } = await axios.get(this.#url)
+            console.log(usuarios)
             const userData = usuarios.find(
                 u => u.userName === user.trim() && u.password === pass
              )
+            console.log(userData)
             return  userData ?? null
         }
         catch (error) {

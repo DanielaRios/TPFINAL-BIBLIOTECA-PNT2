@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar navbar-expand-md mb-1">
+    <nav class="navbar navbar-expand-md">
         <!-- Maneja el tamaño y color de la barra de navegación -->
         <div class="container-fluid">
             <RouterLink class="navbar-brand" to="/">Biblioteca - Lectia </RouterLink>
@@ -26,7 +26,9 @@
                     <li v-if="userStore.getLogeado && !userStore.getAdmin" class="nav-item">
                         <RouterLink class="nav-link" to="/user">Usuario</RouterLink>
                     </li>
-                    
+                    <li v-if="userStore.getLogeado" class="nav-item">
+                        <button class="nav-link btn btn-link" @click="deslogear()">Logout</button>
+                    </li>
 
                 </ul>
             </div>
@@ -70,7 +72,10 @@ export default {
 
     // Métodos
     methods: {
-        // ejemplo: incrementar() { this.contador++; }
+       deslogear() {
+            this.userStore.logout()
+            this.$router.push('/principal')
+        }
     },
 
     // Ciclo de vida
