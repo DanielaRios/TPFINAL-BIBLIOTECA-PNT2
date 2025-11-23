@@ -7,7 +7,7 @@
 
 .centrar{
     display: flex;
-    flex-direction: column;     /* <--- IMPORTANTE */
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
