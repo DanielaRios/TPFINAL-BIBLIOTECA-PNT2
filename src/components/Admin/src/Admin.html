@@ -81,10 +81,11 @@
                                             style="width: 40px; height: 60px; object-fit: cover" />
                                     </td>
                                     <td>
-                                        <button class="btn btn-dark my-1 me-2" @click="editarLibro(libro.id)">
+                                        <button class="btn btn-dark my-1 me-2" data-bs-toggle="modal"
+                                            data-bs-target="#modalEditarLibro" @click="editarLibro(libro)">
                                             Editar
                                         </button>
-                                        <button class="btn btn-color-eliminar my-1 me-2"
+                                        <button class=" btn btn-color-eliminar my-1 me-2"
                                             @click="eliminarLibro(libro.id)">
                                             Eliminar
                                         </button>
@@ -104,5 +105,9 @@
     </div>
     <!-- Modal Nuevo Libro -->
     <AdminNuevoLibro :categorias="categorias" @libro-creado="agregarLibro" />
+
+    <!-- Modal Editar Libro -->
+    <AdminEditarLibro ref="modalEditar" :categorias="categorias" @libro-editado="actualizarLibroEditado" />
+
 </div>
 <!-- </div> -->

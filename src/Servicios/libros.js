@@ -19,22 +19,31 @@ class ServicioLibros {
 
     delete = async id => {
         try {
-            const { data:libroEliminado } = await axios.delete(this.#url+id)
+            const { data: libroEliminado } = await axios.delete(this.#url + id)
             return libroEliminado
         }
-        catch(error) {
+        catch (error) {
             console.error('Error libro DELETE', error.message)
         }
     }
-    
+
     post = async libro => {
-    try {
-      const { data: libroGuardado } = await axios.post(this.#url, libro)
-      return libroGuardado
-    } catch (error) {
-      console.error('Error libros POST', error.message)
+        try {
+            const { data: libroGuardado } = await axios.post(this.#url, libro)
+            return libroGuardado
+        } catch (error) {
+            console.error('Error libros POST', error.message)
+        }
     }
-  }
+    update = async (id, libro) => {
+        try {
+            const { data: libroActualizado } = await axios.put(this.#url + id, libro)
+            return libroActualizado
+        }
+        catch (error) {
+            console.error('Error libros PUT', error.message)
+        }
+    }
 }
 
 export default ServicioLibros

@@ -2,6 +2,8 @@ import ServicioLibros from "@/Servicios/libros";
 import FiltroLibros from '@/components/common/FiltroLibros.vue'
 import AdminUsers from '@/components/AdminUsers.vue'
 import AdminNuevoLibro from "@/components/AdminNuevoLibro.vue";
+import AdminEditarLibro from "@/components/AdminEditarLibro.vue";
+
 
 export default {
     name: 'Admin',
@@ -9,12 +11,13 @@ export default {
     components: {
         FiltroLibros,
         AdminUsers,
-        AdminNuevoLibro
+        AdminNuevoLibro,
+        AdminEditarLibro
     },
 
     data() {
         return {
-            // 👇 importante: instanciar el servicio
+            //importante: instanciar el servicio
             servicioLibros: new ServicioLibros(),
             // Array con todas las categorías AdminNuevoLibro
             categorias: [
@@ -31,6 +34,7 @@ export default {
             filtroCategoria: 'Todas',
             filtroEstado: 'Todos',
             vistaActiva: 'libros', // o 'usuarios' para Nav-underline
+
 
         };
     },
@@ -125,6 +129,32 @@ export default {
             // vuelvo a aplicar filtros para que respete lo que tenga seleccionado
             this.filtrarLibros()
         },
+
+        // EDITAR: Le digo al componente hijo (modal) que cargue el libro
+        editarLibro(libro) {
+            if (this.$refs.modalEditar) {
+                this.$refs.modalEditar.cargarLibro(libro)
+            }
+        },
+
+        // EDITAR: Actualizo el libro editado en ambos arrays
+        actualizarLibroEditado(libroActualizado) {
+            // Actualizo en el array original
+            const indexOriginal = this.libros.findIndex(l => l.id == libroActualizado.id)
+            if (indexOriginal !== -1) {
+                this.libros.splice(indexOriginal, 1, libroActualizado)
+            }
+
+            // Actualizo en el array filtrado
+            const indexFiltrado = this.librosFiltrados.findIndex(l => l.id == libroActualizado.id)
+            if (indexFiltrado !== -1) {
+                this.librosFiltrados.splice(indexFiltrado, 1, libroActualizado)
+            } else {
+                // por si el libro no está en el filtrado actual, reaplico filtros
+                this.filtrarLibros()
+            }
+        },
+
     },
 
     mounted() {
