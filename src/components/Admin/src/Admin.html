@@ -1,131 +1,113 @@
-<div class="container-fluid mt-3">
-    <div class="card">
-        <div class="card-header panel-libros-header">
-            <header>
-                <h2>Panel Libros</h2>
-            </header>
-        </div>
+<!-- <div class="container-fluid px-5 py-4"> -->
+<div class="container-fluid px-5 py-4">
+    <div class="card-header panel-libros-header">
+        <header>
+            <!-- Nabs & tabs - Nav-underline -->
+            <ul class="nav nav-underline mb-4 admin-tabs">
+                <li class="nav-item">
+                    <a class="nav-link" :class="{ active: vistaActiva === 'libros' }" href="#"
+                        @click.prevent="cambiarVista('libros')">
+                        Panel Libros
+                    </a>
+                </li>
 
+                <li class="nav-item">
+                    <a class="nav-link" :class="{ active: vistaActiva === 'usuarios' }" href="#"
+                        @click.prevent="cambiarVista('usuarios')">
+                        Panel Usuarios
+                    </a>
+                </li>
+            </ul>
+        </header>
+    </div>
+    <!-- VISTA LIBROS PARA ADMIN -->
+    <div v-if="vistaActiva === 'libros'">
         <div class="card-body">
-            <!-- Filtros -->
-            <div class="card mb-3 filtro-card">
-                <div class="card-body">
-                    <div class="row g-3 align-items-end">
-                        <!-- Izquierda: buscador + nuevo libro -->
-                        <div class="col-12 col-lg-7">
-                            <label class="form-label fs-5"><strong>Buscar (Título/Autor)</strong></label>
-                            <input type="text" class="form-control mb-2" v-model="filtroTexto"
-                                placeholder="Buscar libro..." />
+            <!-- Componente FiltroLibros -->
+            <FiltroLibros @filtrar="aplicarFiltros" @reset="resetFiltros" @cambio-texto="filtrarPorTexto" />
 
-                            <button class="btn btn-nuevo-libro btn-lg" @click="nuevoLibro">
-                                Nuevo Libro
-                            </button>
-                        </div>
+            <!-- Título y botón Nuevo Libro -->
+            <div class="d-flex justify-content-between align-items-center">
+                <h1>Lista de Libros</h1>
+                <button class="btn btn-nuevo-libro btn-lg px-4" data-bs-toggle="modal"
+                    data-bs-target="#modalNuevoLibro">
+                    Nuevo Libro
+                </button>
 
-                        <!-- Derecha: categoría, estado y botones -->
-                        <div class="col-12 col-lg-5">
-                            <div class="row g-3 align-items-end">
-                                <!-- Categoría -->
-                                <div class="col-6">
-                                    <label class="form-label fs-5"><strong>Categoría</strong></label>
-                                    <div class="dropdown filtro-dropdown">
-                                        <button class="btn btn-dark btn-lg dropdown-toggle w-100" type="button"
-                                            data-bs-toggle="dropdown">
-                                            {{ filtroCategoriaMostrar }}
+            </div>
+            <hr />
+
+            <!-- Si MockAPI no trajo Libros -->
+            <div v-if="libros.length === 0">
+                <h4 class="alert alert-secondary">Cargando libros desde MockAPI...</h4>
+            </div>
+
+            <!-- Cuando MockAPI ya cargo Libros -->
+            <div v-else>
+                <!-- Si el filtro dejó 0 resultados -->
+                <div v-if="librosFiltrados.length === 0" class="alert alert-secondary text-center mt-3">
+                    No se encontro ningún libro
+                </div>
+                <!-- Tabla de libros -->
+                <div v-else>
+                    <div class="table-responsive">
+                        <table class="table tabla-libros align-middle">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#ID</th>
+                                    <th>TITULO</th>
+                                    <th>AUTOR</th>
+                                    <th>CATEGORÍA</th>
+                                    <th class="text-center">AÑO</th>
+                                    <th class="text-center">STOCK</th>
+                                    <th class="text-center">DISPONIBLE</th>
+                                    <th>FOTO</th>
+                                    <th>ACCIONES</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(libro, index) in librosFiltrados" :key="libro.id">
+                                    <td class="text-center">{{ libro.id }}</td>
+                                    <td><b>{{ libro.titulo }}</b></td>
+                                    <td><b>{{ libro.autor }}</b></td>
+                                    <td>{{ libro.categoria }}</td>
+                                    <td class="text-center">{{ libro.anio }}</td>
+                                    <td class="text-center">{{ libro.stock }}</td>
+                                    <td class="text-center">
+                                        {{ libro.disponibilidad ? 'Sí' : 'No' }}
+                                    </td>
+                                    <td>
+                                        <img :src="libro.foto" alt="Portada"
+                                            style="width: 40px; height: 60px; object-fit: cover" />
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-dark my-1 me-2" data-bs-toggle="modal"
+                                            data-bs-target="#modalEditarLibro" @click="editarLibro(libro)">
+                                            Editar
                                         </button>
-                                        <ul class="dropdown-menu">
-                                            <li><button class="dropdown-item"
-                                                    @click="setCategoria('Todas')">Todas</button></li>
-                                            <li><button class="dropdown-item"
-                                                    @click="setCategoria('Ficción')">Ficción</button></li>
-                                            <li><button class="dropdown-item"
-                                                    @click="setCategoria('Ciencia')">Ciencia</button></li>
-                                            <li><button class="dropdown-item"
-                                                    @click="setCategoria('Historia')">Historia</button></li>
-                                        </ul>
-                                    </div>
-                                </div>
-
-                                <!-- Estado -->
-                                <div class="col-6">
-                                    <label class="form-label fs-5"><strong>Estado</strong></label>
-                                    <div class="dropdown filtro-dropdown">
-                                        <button class="btn btn-dark btn-lg dropdown-toggle w-100" type="button"
-                                            data-bs-toggle="dropdown">
-                                            {{ filtroEstadoMostrar }}
+                                        <button class=" btn btn-color-eliminar my-1 me-2"
+                                            @click="eliminarLibro(libro.id)">
+                                            Eliminar
                                         </button>
-                                        <ul class="dropdown-menu">
-                                            <li><button class="dropdown-item" @click="setEstado('Todos')">Todos</button>
-                                            </li>
-                                            <li><button class="dropdown-item"
-                                                    @click="setEstado('Disponible')">Disponible</button></li>
-                                            <li><button class="dropdown-item" @click="setEstado('NoDisponible')">No
-                                                    disponible</button></li>
-                                        </ul>
-                                    </div>
-                                </div>
-
-                                <!-- Botones Filtrar / Reset -->
-                                <div class="col-12 d-flex justify-content-end gap-2 mt-2">
-                                    <button class="btn btn-dark btn-lg" @click="aplicarFiltros">Filtrar</button>
-                                    <button class="btn btn-outline-dark btn-lg"
-                                        @click="resetFiltros">Reset</button>
-                                </div>
-                            </div>
-                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-            </div>
 
-            <!-- Tabla de libros -->
-            <div v-if="libros.length">
-                <div class="table-responsive">
-                    <table class="table tabla-libros align-middle">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>TITULO</th>
-                                <th>AUTOR</th>
-                                <th>CATEGORÍA</th>
-                                <th>AÑO</th>
-                                <th>STOCK</th>
-                                <th>DISPONIBLE</th>
-                                <th>FOTO</th>
-                                <th>ACCIONES</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(libro, index) in libros" :key="libro.id">
-                                <td>{{ index + 1 }}</td>
-                                <td><b>{{ libro.titulo }}</b></td>
-                                <td><b>{{ libro.autor }}</b></td>
-                                <td>{{ libro.categoria }}</td>
-                                <td>{{ libro.anio }}</td>
-                                <td>{{ libro.stock }}</td>
-                                <td>
-                                    {{ libro.disponibilidad ? 'Sí' : 'No' }}
-                                </td>
-                                <td>
-                                    <img :src="libro.foto" alt="Portada"
-                                        style="width: 40px; height: 60px; object-fit: cover" />
-                                </td>
-                                <td>
-                                    <button class="btn btn-dark me-2" @click="editarLibro(libro.id)">
-                                        Editar
-                                    </button>
-                                    <button class="btn btn-color-eliminar" @click="eliminarLibro(libro.id)">
-                                        Eliminar
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
             </div>
-
-            <h4 v-else class="alert alert-secondary">
-                Cargando libros desde MockAPI...
-            </h4>
         </div>
     </div>
+    <!-- VISTA USUARIOS PARA ADMIN -->
+    <div v-else-if="vistaActiva === 'usuarios'">
+        <AdminUsers :key="vistaActiva" /> <!-- usamos key para refrescar el componente -->
+    </div>
+    <!-- Modal Nuevo Libro -->
+    <AdminNuevoLibro :categorias="categorias" @libro-creado="agregarLibro" />
+
+    <!-- Modal Editar Libro -->
+    <AdminEditarLibro ref="modalEditar" :categorias="categorias" @libro-editado="actualizarLibroEditado" />
+
 </div>
+<!-- </div> -->

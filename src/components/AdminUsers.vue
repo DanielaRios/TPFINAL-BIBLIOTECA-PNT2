@@ -1,14 +1,14 @@
 <template>
+    <h2> FALTA VISTA USUARIOS PARA ADMIN</h2>
 
-    <!-- Filtros -->
+    <!--Filtros -->
     <div class="card mb-3 filtro-card">
         <div class="card-body">
             <div class="row g-3 align-items-end">
                 <!-- Buscar (Título/Autor) -->
                 <div class="col-12 col-lg-5">
-                    <label class="form-label fs-5"><strong>Buscar (Título/Autor)</strong></label>
-                    <input type="text" class="form-control" v-model="filtroTexto" placeholder="Buscar libro..."
-                        @input="cambioTexto" />
+                    <label class="form-label fs-5"><strong>Buscar Usuario</strong></label>
+                    <input type="text" class="form-control" v-model="filtroTexto" placeholder="Buscar usuario..." />
                 </div>
 
                 <!-- Categoría -->
@@ -20,12 +20,11 @@
                         </button>
                         <ul class="dropdown-menu">
                             <li><button class="dropdown-item" @click="setCategoria('Todas')">Todas</button></li>
-                            <li><button class="dropdown-item" @click="setCategoria('Ficción')">Ficción</button></li>
-                            <li><button class="dropdown-item" @click="setCategoria('Fantasía')">Fantasía</button></li>
-                            <li><button class="dropdown-item" @click="setCategoria('Romance')">Romance</button></li>
-                            <li><button class="dropdown-item" @click="setCategoria('Misterio')">Misterio</button></li>
-                            <li><button class="dropdown-item" @click="setCategoria('Ciencia ficción')">Ciencia ficción</button></li>
-
+                            <li><button class="dropdown-item" @click="setCategoria('Ficción')">Ficción</button>
+                            </li>
+                            <li><button class="dropdown-item" @click="setCategoria('Ciencia')">Ciencia</button>
+                            </li>
+                            <li><button class="dropdown-item" @click="setCategoria('Historia')">Historia</button></li>
                         </ul>
                     </div>
                 </div>
@@ -40,7 +39,8 @@
                         <ul class="dropdown-menu">
                             <li><button class="dropdown-item" @click="setEstado('Todos')">Todos</button></li>
                             <li><button class="dropdown-item" @click="setEstado('Disponible')">Disponible</button></li>
-                            <li><button class="dropdown-item" @click="setEstado('NoDisponible')">No disponible</button></li>
+                            <li><button class="dropdown-item" @click="setEstado('NoDisponible')">No
+                                    disponible</button></li>
                         </ul>
                     </div>
                 </div>
@@ -53,61 +53,12 @@
             </div>
         </div>
     </div>
-</template>
 
+</template>
 <script>
-export default {
-    name: 'FiltroLibros',
-    
-    data() {
-        return {
-            filtroTexto: '',
-            filtroCategoria: 'Todas',
-            filtroEstado: 'Todos'
-        }
-    },
-    computed: {
-        filtroCategoriaMostrar() {
-            return this.filtroCategoria
-        },
-        filtroEstadoMostrar() {
-            if (this.filtroEstado === 'Todos') return 'Todos'
-            if (this.filtroEstado === 'Disponible') return 'Disponible'
-            return 'No disponible'
-        }
-    },
-    methods: {
-        setCategoria(valor) {
-            this.filtroCategoria = valor
-        },
-        setEstado(valor) {
-            this.filtroEstado = valor
-        },
-        aplicarFiltros() {
-            // Aviso al padre cuales son los filtros elegidos
-            this.$emit('filtrar', {
-                texto: this.filtroTexto,
-                categoria: this.filtroCategoria,
-                estado: this.filtroEstado
-            })
-        },
-        resetFiltros() {
-            this.filtroTexto = ''
-            this.filtroCategoria = 'Todas'
-            this.filtroEstado = 'Todos'
-            // Aviso al padre que se reseteo
-            this.$emit('reset')
-        },
-        // Emite solo el texto para filtrar en vivo
-        cambioTexto() {
-            this.$emit('cambio-texto', this.filtroTexto)
-        }
-    }
-}
 </script>
 
 <style scoped>
-
 /* --- Dropdown general  --- */
 .filtro-dropdown {
     width: 100%;
