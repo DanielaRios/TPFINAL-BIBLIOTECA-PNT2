@@ -15,17 +15,10 @@
                         class="form-control" 
                         v-model.trim="formData.usuario"
                         @input="formDirty.usuario=true">
-                    <!-- <input 
-                        id="nombre" 
-                        type="text" 
-                        class="form-control" 
-                        v-model.trim="formData.nombre"
-                        @input="formDirty.nombre=true"
-                    > -->
                     <!-- cartel validación -->
-                    <div v-if="errorUsuario.mostrar" class="alert alert-danger my-2">
+                    <p v-if="errorUsuario.mostrar" class="error-text my-1">
                         {{ errorUsuario.mensaje }}
-                    </div>
+                    </p>
                 </div>
 
                 <!-- campo apellido -->
@@ -36,25 +29,18 @@
                         class="form-control" 
                         v-model.trim="formData.password"
                         @input="formDirty.password=true">
-                    <!-- <input 
-                        id="apellido" 
-                        type="text" 
-                        class="form-control" 
-                        v-model.trim="formData.apellido"
-                        @input="formDirty.apellido=true"                    
-                    > -->
                     <!-- cartel validación -->
-                    <div v-if="errorPassword.mostrar" class="alert alert-danger my-2">
+                    <p v-if="errorPassword.mostrar" class="error-text my-1">
                         {{ errorPassword.mensaje }}
-                    </div>
+                    </p>
                 </div>
                 <div class="col-12 d-grid">
                     <button class="btn btn-primary my-3" :disabled="estadoBotonDeshabilitado()">Ingresar</button>
                 </div>
             </form>
-            <div class="alert alert-danger alert-dismissible fade show" role="alert" :hidden="errorAutenticacion()">
+            <div v-if="errorAuth.mostrar" class="alert alert-danger alert-dismissible fade show" role="alert">
                 {{ errorMessage }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @click="limpiarError()"></button>
             </div>
         </div>
     </section>
@@ -76,7 +62,8 @@ export default {
         return {
             formData: this.getIniciarData(),
             formDirty: this.getIniciarData(),
-            userStore: useUserStore()
+            userStore: useUserStore(),
+            errorMessage: ""
         };
     },
     // Propiedades computadas  
@@ -108,6 +95,13 @@ export default {
         ok: mensaje == ''
       }
     },
+    errorAuth() {
+    
+      return {
+        mensaje: this.errorMessage,
+        mostrar: this.errorMessage != '' && this.errorMessage,
+      }
+    },
 
     },
 
@@ -116,15 +110,11 @@ export default {
         getIniciarData() {
             return {
                 usuario: null,
-                password: null,
-                errorMessage: ""
+                password: null
                }
         },
         estadoBotonDeshabilitado() {
             return !this.errorUsuario.ok || !this.errorPassword.ok
-        },
-        errorAutenticacion(){
-            return this.errorMessage !== ""
         },
         async enviar() {
             const datos = { ...this.formData }
@@ -135,6 +125,9 @@ export default {
             }catch(e){
                this.errorMessage = e.message
             }
+        },
+        limpiarError(){
+            this.errorMessage = ''
         }
     }
 
@@ -146,6 +139,13 @@ export default {
 
 .color-btn{
     background-color: #1A1F2E;
+}
+
+.error-text {
+    color: #dc3545;        
+    font-size: 0.85rem;
+    /* margin-top: 4px;
+    margin-bottom: 0; */
 }
 
 </style>

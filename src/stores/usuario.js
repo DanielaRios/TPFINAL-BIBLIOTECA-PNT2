@@ -14,7 +14,6 @@ export const useUserStore = defineStore('usuario', {
     actions: {
         async login(user, pass){
             const userData = await this.servicioUsuarios.autenticacion(user, pass)
-            console.log(userData)
 
             if (!userData){
                 throw new Error("Credenciales incorrectas")
@@ -30,7 +29,6 @@ export const useUserStore = defineStore('usuario', {
             return true
         },
         logout(){
-            console.log("ADIOS")
             this.usuario = null
         }
     }
