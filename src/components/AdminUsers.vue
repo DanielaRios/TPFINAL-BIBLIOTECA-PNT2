@@ -1,5 +1,5 @@
 <template>
-    <h2> VISTA USUARIOS PARA ADMIN</h2>
+    <h2> FALTA VISTA USUARIOS PARA ADMIN</h2>
 
     <!--Filtros -->
     <div class="card mb-3 filtro-card">
@@ -58,4 +58,55 @@
 <script>
 </script>
 
-<style scoped></style>
+<style scoped>
+/* --- Dropdown general  --- */
+.filtro-dropdown {
+    width: 100%;
+}
+
+/* Botones de los dropdowns al 100% */
+.filtro-dropdown .btn {
+    width: 100%;
+    height: 45px;
+    /* antes era 55px con btn-lg */
+    font-size: 1rem;
+    /* más chico que el 1.1rem anterior */
+}
+
+/* ---- Estilo general del bloque de filtros ---- */
+.filtro-card {
+    background-color: #f8f9fa;
+    /* gris muy claro */
+    border-radius: 8px;
+}
+
+/* Alinea todos los campos abajo */
+.filtro-card .row {
+    align-items: flex-end;
+}
+
+/* Input busqueda con altura pareja con los botones */
+.filtro-card input.form-control {
+    height: 45px;
+    /* igual a los botones */
+    font-size: 1rem;
+    padding: 8px 12px;
+    margin-bottom: 0;
+    /* no hay botón debajo */
+}
+
+/* Botones Filtrar / Reset */
+.filtro-card .btn {
+    min-width: 100px;
+    height: 45px;
+    font-size: 1rem;
+}
+
+/* Responsivo */
+@media (max-width: 991px) {
+    .filtro-card .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}
+</style>

@@ -52,13 +52,13 @@
 
 /* Hover */
 .admin-tabs .nav-link:hover {
-    color: #464646;         /* celestito al pasar el mouse */
+    color: #464646;         /* color al pasar el mouse */
 }
 
 /* Estado activo */
 .admin-tabs .nav-link.active {
-    color: #ffffff;         /* celeste más fuerte */
-    border-bottom: 3px solid #ffffff;  /* subrayado celeste */
+    color: #ffffff;         
+    border-bottom: 3px solid #ffffff;  /* subrayado blanco */
 }
 
 

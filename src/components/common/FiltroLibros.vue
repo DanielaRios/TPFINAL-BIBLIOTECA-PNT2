@@ -24,8 +24,7 @@
                             <li><button class="dropdown-item" @click="setCategoria('Fantasía')">Fantasía</button></li>
                             <li><button class="dropdown-item" @click="setCategoria('Romance')">Romance</button></li>
                             <li><button class="dropdown-item" @click="setCategoria('Misterio')">Misterio</button></li>
-                            <li><button class="dropdown-item" @click="setCategoria('Ciencia ficción')">Ciencia
-                                    ficción</button></li>
+                            <li><button class="dropdown-item" @click="setCategoria('Ciencia ficción')">Ciencia ficción</button></li>
 
                         </ul>
                     </div>

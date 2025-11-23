@@ -26,6 +26,15 @@ class ServicioLibros {
             console.error('Error libro DELETE', error.message)
         }
     }
+    
+    post = async libro => {
+    try {
+      const { data: libroGuardado } = await axios.post(this.#url, libro)
+      return libroGuardado
+    } catch (error) {
+      console.error('Error libros POST', error.message)
+    }
+  }
 }
 
 export default ServicioLibros

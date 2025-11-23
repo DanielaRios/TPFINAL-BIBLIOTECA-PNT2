@@ -1,19 +1,29 @@
 import ServicioLibros from "@/Servicios/libros";
 import FiltroLibros from '@/components/common/FiltroLibros.vue'
-import AdminUser from '@/components/AdminUser.vue'
+import AdminUsers from '@/components/AdminUsers.vue'
+import AdminNuevoLibro from "@/components/AdminNuevoLibro.vue";
 
 export default {
     name: 'Admin',
 
     components: {
         FiltroLibros,
-        AdminUser
+        AdminUsers,
+        AdminNuevoLibro
     },
 
     data() {
         return {
             // 👇 importante: instanciar el servicio
             servicioLibros: new ServicioLibros(),
+            // Array con todas las categorías AdminNuevoLibro
+            categorias: [
+                "Ficción",
+                "Fantasía",
+                "Romance",
+                "Misterio",
+                "Ciencia Ficción"
+            ],
 
             libros: [],
             librosFiltrados: [],
@@ -106,7 +116,15 @@ export default {
         // Cambiar vista entre libros y usuarios Nav-underline
         cambiarVista(vista) {
             this.vistaActiva = vista
-        }
+        },
+        //Nuevo libro
+        agregarLibro(libroGuardado) {
+            // lo agrego al array original
+            this.libros.push(libroGuardado)
+
+            // vuelvo a aplicar filtros para que respete lo que tenga seleccionado
+            this.filtrarLibros()
+        },
     },
 
     mounted() {
