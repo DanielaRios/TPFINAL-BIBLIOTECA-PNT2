@@ -1,13 +1,13 @@
 <template>
     <section class="card" style="width: 22rem;">
-        <div class="card-header">
-            <h3>Ingresá a tu cuenta</h3>
+        <div class="card-header text-center">
+            <h4>Ingresá a tu cuenta</h4>
         </div>
 
         <div class="card-body">
 
             <form novalidate @submit.prevent="enviar">
-                <!-- campo nombre -->
+                <!-- campo usuario -->
                 <div class="form-group mb-2">
                     <label for="usuario">Usuario</label>
                     <input id="usuario" 
@@ -21,14 +21,21 @@
                     </p>
                 </div>
 
-                <!-- campo apellido -->
+                <!-- campo Contraseña -->
                 <div class="form-group">
                     <label for="password">Contraseña</label>
-                    <input id="password" 
+                    <div class="input-group">
+                        <input :type="mostrar ? 'text' : 'password'" class="form-control"
+                         id="password" aria-label="password" aria-describedby="basic-addon2"
+                        v-model.trim="formData.password"
+                        @input="formDirty.password=true">
+                        <IconEye :type="mostrar ? 'text' : 'password'" @click="mostrar = !mostrar"></IconEye>
+                    </div>
+                    <!-- <input id="password" 
                         type="password" 
                         class="form-control" 
                         v-model.trim="formData.password"
-                        @input="formDirty.password=true">
+                        @input="formDirty.password=true"> -->
                     <!-- cartel validación -->
                     <p v-if="errorPassword.mostrar" class="error-text my-1">
                         {{ errorPassword.mensaje }}
@@ -48,12 +55,13 @@
 
 <script>
 import { useUserStore } from '@/stores/usuario';
+import IconEye from './IconEye.vue';
 
 export default {
     name: 'LoginForm', // cambiá el nombre si querés  
     
     components: {
-
+        IconEye
     },
     props: {
 
@@ -63,7 +71,8 @@ export default {
             formData: this.getIniciarData(),
             formDirty: this.getIniciarData(),
             userStore: useUserStore(),
-            errorMessage: ""
+            errorMessage: "",
+            mostrar: false
         };
     },
     // Propiedades computadas  

@@ -1,7 +1,7 @@
 <template>
    <section class="card">
-        <div class="card-header">
-            <h3>Registrate</h3>
+        <div class="card-header text-center">
+            <h4>Regístrate</h4>
         </div>
         <div class="card-body">
             <div v-if="errorRegistro.mostrar" class="alert alert-danger alert-dismissible fade show alert-chico" role="alert">
@@ -10,27 +10,29 @@
             </div>
             <form @submit.prevent="registrar" autocomplete="off">
                 <!-- campo nombre -->
-                <div class="form-group">
-                    <label for="nombre">Nombre</label>
-                    <input type="text" id="nombre" class="form-control" 
-                        v-model.trim="formData.nombre"
-                        @input="formDirty.nombre = true"
-                    >
-                    <p v-if="!formData.nombre && formDirty.nombre" class="error-text mt-1">
-                        Campo requerido
-                    </p>
-                </div>
+                <div class="input-group">
+                    <div class="form-group col-6">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" id="nombre" class="form-control" 
+                            v-model.trim="formData.nombre"
+                            @input="formDirty.nombre = true"
+                        >
+                        <p v-if="!formData.nombre && formDirty.nombre" class="error-text mt-1">
+                            Campo requerido
+                        </p>
+                    </div>
 
-                <!-- campo apellido -->
-                <div class="form-group">
-                    <label for="apellido">Apellido</label>
-                    <input type="text" id="apellido" class="form-control" 
-                        v-model.trim="formData.apellido"
-                        @input="formDirty.apellido = true"
-                    >
-                    <p v-if="!formData.apellido && formDirty.apellido" class="error-text mt-1">
-                        Campo requerido
-                    </p>
+                    <!-- campo apellido -->
+                    <div class="form-group col-6">
+                        <label for="apellido">Apellido</label>
+                        <input type="text" id="apellido" class="form-control" 
+                            v-model.trim="formData.apellido"
+                            @input="formDirty.apellido = true"
+                        >
+                        <p v-if="!formData.apellido && formDirty.apellido" class="error-text mt-1">
+                            Campo requerido
+                        </p>
+                    </div>
                 </div>
 
                 <!-- campo userName -->
@@ -47,17 +49,21 @@
                 </div>
 
                 <!-- campo password -->
-                 <!-- <div class="input-group mb-3">
-                        <input type="password" class="form-control" placeholder="password" aria-label="password" aria-describedby="basic-addon2">
-                        <span class="input-group-text" id="basic-addon2"></span>
-                    </div> -->
                 <div class="form-group">
                     <label for="password">Contraseña</label>
-                    <input type="password" id="password" class="form-control" 
+                    <div class="input-group">
+                        <input :type="mostrar ? 'text' : 'password'" class="form-control" 
+                        id="password" aria-label="password" aria-describedby="basic-addon2"
+                        v-model.trim="formData.password"
+                        @input="formDirty.password=true"
+                        autocomplete="new-password">
+                        <IconEye :type="mostrar ? 'text' : 'password'" @click="mostrar = !mostrar"></IconEye>
+                    </div>
+                    <!-- <input type="password" id="password" class="form-control" 
                         v-model.trim="formData.password"
                         @input="formDirty.password = true"
                         autocomplete="new-password"
-                    >
+                    > -->
                     <p v-if="errorPassword.mostrar" class="error-text mt-1">
                         {{ errorPassword.mensaje }}
                     </p>
@@ -102,12 +108,13 @@
 
 <script>
 import { useUserStore } from '@/stores/usuario';
+import IconEye from './IconEye.vue';
 
 export default {
     name: 'RegisterForm', // cambiá el nombre si querés  
     
     components: {
-
+        IconEye
     },
     props: {
 
@@ -117,7 +124,9 @@ export default {
             formData: this.initNewUser(),
             formDirty: this.initNewUser(),
             userStore: useUserStore(),
-            errorMessage: ""
+            errorMessage: "",
+            mostrar: false
+
         };
     },
     // Propiedades computadas  
@@ -251,6 +260,7 @@ export default {
 .error-text {
     color: #dc3545;        
     font-size: 0.85rem;
+    margin-bottom: 0;
 }
 .card{
     width: 22rem;
