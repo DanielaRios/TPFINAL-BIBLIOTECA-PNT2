@@ -33,6 +33,26 @@ export const useLibrosStore = defineStore('libros', {
       } else {
         console.warn(`No se encontró el libro con id ${id}`);
       }
+    },
+
+    async devolverLibro(id) {
+    const libro = this.lista.find(l => l.id === id);
+    if (libro) {
+    // Incrementar stock local
+    libro.stock += 1;
+
+    try {
+      // Actualizar en la API
+      await this.servicioLibros.update(id, { ...libro, stock: libro.stock });
+    } catch (error) {
+      console.error("Error al devolver libro en la API:", error);
     }
+    } else {
+    console.warn(`No se encontró el libro con id ${id}`);
+  }
+}
+
+
+
   }
 });

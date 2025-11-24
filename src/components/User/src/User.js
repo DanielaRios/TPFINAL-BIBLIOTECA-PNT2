@@ -1,15 +1,18 @@
 import { useUserStore } from "@/stores/usuario"; // Importa el store de usuario
+import { useLibrosStore } from "@/stores/libros";
 
 export default {
   name: 'User',
 
   data() {
     const userStore = useUserStore(); // Obtenemos el store del usuario
-
+    const librosStore = useLibrosStore();
 
 
     return {
       userStore,
+      librosStore,
+
       // Datos del usuario logueado
       usuarioActualID: userStore.usuario?.id ?? null,
       usuarioActualNombre: userStore.usuario?.nombre ?? '',
@@ -27,7 +30,7 @@ export default {
       devolucionExitosa: false,
       libroDevuelto: null,
 
-    }
+    };
   },
 
   mounted() {
@@ -87,47 +90,43 @@ export default {
         );
     },
 
-    // Índice inicial para paginación
+
     fromIndex() {
       return (this.page - 1) * this.pageSize;
     },
 
-    // Índice final para paginación
     toIndex() {
       return Math.min(this.page * this.pageSize, this.prestamosFiltrados.length);
     },
 
-    // Subarray paginado de préstamos
     prestamosPaginados() {
       return this.prestamosFiltrados.slice(this.fromIndex, this.toIndex);
     }
   },
 
   methods: {
-    // Formateo simple de fechas
+    // Formateo fechas
     formatDate(fecha) {
       if (!fecha) return '-';
       const d = new Date(fecha);
       return d.toLocaleDateString();
     },
 
-    // Acción de renovar un préstamo (puede implementarse según tu lógica)
+    
     renovar(prestamo) {
       alert(`Renovando préstamo de "${prestamo.titulo}"`);
-      // Aquí podrías actualizar la fecha de devolución prevista
     },
 
     // Ver detalles del préstamo
     verDetalles(prestamo) {
       alert(`Detalles de "${prestamo.titulo}"`);
-      // Aquí podrías mostrar un modal con más info o redirigir a otra vista
     },
 
-    // Reemplaza imagen si falla la carga
+    
     imagenError(event) {
       event.target.src = '/default-cover.jpg'; // Portada por defecto
     },
-        //NUEVA FUNCIÓN PARA ABRIR EL MODAL
+      
     abrirModalDevolucion(prestamo) {
       this.prestamoSeleccionado = prestamo;
       this.modalVisible = true;
@@ -138,31 +137,44 @@ export default {
       if (!this.prestamoSeleccionado) return;
 
       const fechaHoy = new Date().toISOString();
-      const idPrestamo = this.prestamoSeleccionado.id; // o lo que uses como identificador
+      const idPrestamo = this.prestamoSeleccionado.id; 
       let prestamoActualizado = null; 
-      // Buscar índice del préstamo dentro del array del store
+    
       const index = this.userStore.usuario.librosAlquilados.findIndex(
       p => p.id === idPrestamo
     );
 
     if (index !== -1) {
-    // Crear una copia actualizada del préstamo
+
     prestamoActualizado = {
       ...this.userStore.usuario.librosAlquilados[index],
-      fechaDevolucion: fechaHoy
+      titulo: this.prestamoSeleccionado.titulo,
+      fechaDevolucion: fechaHoy,
+      activo: false,
+      estado: "Devuelto"
     };
 
 
-    // Reemplazar el préstamo dentro del array
+
     const nuevosPrestamos = [...this.userStore.usuario.librosAlquilados];
     nuevosPrestamos[index] = prestamoActualizado;
 
-    this.userStore.usuario.librosAlquilados = nuevosPrestamos;
+
+    this.userStore.servicioUsuarios.actualizarUsuario({
+      ...this.userStore.usuario,
+      librosAlquilados: nuevosPrestamos
+    }).then(res => {
+      this.userStore.usuario = res.data;
+    }).catch(err => console.error("Error al devolver:", err));
+    
+    //Actualizar stock en el catálogo
+    this.librosStore.devolverLibro(prestamoActualizado.libroID);
+
+
   }
 
-      // Guardamos el libro para mostrarlo en la animación de éxito
+  // Guardamos el libro para mostrarlo en la animación de éxito
   this.libroDevuelto = prestamoActualizado;
-
   this.modalVisible = false;
 
 
@@ -175,7 +187,6 @@ export default {
 
       });
 
-  this.prestamoSeleccionado = null;
     
 
     },

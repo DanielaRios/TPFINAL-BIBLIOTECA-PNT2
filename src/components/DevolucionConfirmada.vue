@@ -9,7 +9,7 @@
     <h2 class="mb-3">¡Devolución Completada!</h2>
 
     <p class="text-muted mb-4">
-      El libro <strong>"{{ $route.params.titulo }}"</strong> fue devuelto correctamente.
+      El libro <strong>"{{ titulo}}"</strong> fue devuelto correctamente.
     </p>
 
     <!-- Botones -->
@@ -30,7 +30,12 @@
 
 <script>
 export default {
-  name: "DevolucionConfirmada"
+  name: "DevolucionConfirmada",
+  computed:{
+    titulo() {
+      return this.$route.params.titulo || 'Libro';
+    }
+  }
 };
 </script>
 

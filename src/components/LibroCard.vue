@@ -19,42 +19,103 @@
           </div>
           <div class="row">
             <div class="col-12 d-grid">
-              <!-- Ahora abre la confirmación en lugar de alquilar directo -->
-              <button class="btn btn-primary" @click="mostrarConfirmacion = true" :disabled="chequearStock">
-                Alquilar
-              </button>
+              <button class="btn btn-primary" @click="alquilar" :disabled="chequearStock">Alquilar</button>
             </div>  
           </div>
         </div>            
       </div>
     </div>
-
-    <!-- Componente de confirmación -->
-    <ConfirmacionAlquiler 
-      v-if="mostrarConfirmacion" 
-      :libro="libro" 
-      @cerrar="mostrarConfirmacion = false; stock--"
-    />
+    <ConfirmacionAlquiler
+      v-if="mostrarConfirmacion"
+      :libro="libro"
+      @cerrar="mostrarConfirmacion = false" 
+     />    
   </div>
 </template>
 
 <script>
-import { ref, computed } from 'vue';
+import { useUserStore } from '@/stores/usuario';
+import { useLibrosStore } from '@/stores/libros';
 import ConfirmacionAlquiler from './ConfirmacionAlquiler.vue';
 
 export default {
   name: 'LibroCard',
   components: { ConfirmacionAlquiler },
   props: {
-    libro: { type: Object, required: true }
+    libro: {
+      type: Object,
+      required: true
+    }
   },
-  setup(props) {
-    const stock = ref(props.libro.stock);
-    const mostrarConfirmacion = ref(false);
+  data() {
+    return {
+      userStore: useUserStore(),
+      librosStore: useLibrosStore(),
+      stock: this.libro.stock,
+      mostrarConfirmacion: false
+    };
+  },
+  computed: {
+    chequearStock() {
+      return this.stock <= 0;
+    }
+  },
+  methods: {
+    async alquilar() {
+      const user = this.userStore.getUsuario;
 
-    const chequearStock = computed(() => stock.value <= 0);
+      if (!this.userStore.getLogeado) {
+        this.$router.push('/login');
+        return;
+      }
 
-    return { stock, mostrarConfirmacion, chequearStock };
+      if (this.userStore.getAdmin) {
+        alert("El administrador no puede alquilar libros.");
+        return;
+      }
+
+      const activos = (user.librosAlquilados || []).filter(l => l.activo).length;
+      if (activos >= 15) {
+        alert("No podés alquilar más de 15 libros activos.");
+        return;
+      }
+
+      if (this.stock <= 0) {
+        alert("No hay stock disponible para este libro.");
+        return;
+      }
+
+      this.mostrarConfirmacion = true;
+
+      const nuevoPrestamo = {
+        libroID: this.libro.id,
+        foto: this.libro.foto || '',
+        titulo: this.libro.titulo,
+        fechaAlquiler: new Date().toISOString().split('T')[0],
+        fechaDevolucionPrevista: new Date(Date.now() + 15*24*60*60*1000).toISOString().split('T')[0],
+        fechaDevolucion: null,
+        activo: true
+      };
+
+      const librosActualizados = [...(user.librosAlquilados || []), nuevoPrestamo];
+
+      try {
+        // Actualizamos usuario
+        const res = await this.userStore.servicioUsuarios.actualizarUsuario({
+          ...user,
+          librosAlquilados: librosActualizados
+        });
+        this.userStore.usuario = res.data;
+
+        // Reducimos stock en API y store
+        await this.librosStore.actualizarStock(this.libro.id, this.stock - 1);
+        this.stock--; // Actualizamos localmente
+
+      } catch (error) {
+        console.error("Error al alquilar el libro:", error);
+        alert("No se pudo completar el alquiler. Intente nuevamente.");
+      }
+    }
   }
 };
 </script>
