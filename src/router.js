@@ -34,7 +34,10 @@ const routes = [
 // Aca creo variable router para poder usar el enrutador en main.js
 const router = createRouter({
     history: createWebHistory(),
-    routes: routes
+    routes: routes,
+    scrollBehavior() {
+    return { top: 0 }   
+  }
 })
 
 export default router

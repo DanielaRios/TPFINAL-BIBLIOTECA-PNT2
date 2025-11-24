@@ -78,8 +78,7 @@ export default {
       const user = userStore.getUsuario;
 
       if (!user) {
-        alert("Debes iniciar sesión primero.");
-        return;
+        router.push('/login')
       }
 
       if (props.libro.stock <= 0) {
