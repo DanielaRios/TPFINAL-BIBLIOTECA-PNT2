@@ -5,14 +5,14 @@
         <div class="card-body">
             <div class="row g-3 align-items-end">
                 <!-- Buscar (Título/Autor) -->
-                <div class="col-12 col-lg-5">
+                <div class="col-12 col-md-12 col-lg-4">
                     <label class="form-label fs-5"><strong>Buscar (Título/Autor)</strong></label>
                     <input type="text" class="form-control" v-model="filtroTexto" placeholder="Buscar libro..."
                         @input="cambioTexto" />
                 </div>
 
                 <!-- Categoría -->
-                <div class="col-6 col-lg-3">
+                <div class="col-6 col-md-6 col-lg-2">
                     <label class="form-label fs-5"><strong>Categoría</strong></label>
                     <div class="dropdown filtro-dropdown">
                         <button class="btn btn-dark dropdown-toggle w-100" type="button" data-bs-toggle="dropdown">
@@ -31,7 +31,7 @@
                 </div>
 
                 <!-- Estado -->
-                <div class="col-6 col-lg-2">
+                <div class="col-6 col-md-6 col-lg-2">
                     <label class="form-label fs-5"><strong>Estado</strong></label>
                     <div class="dropdown filtro-dropdown">
                         <button class="btn btn-dark dropdown-toggle w-100" type="button" data-bs-toggle="dropdown">
@@ -46,7 +46,7 @@
                 </div>
 
                 <!-- Botones -->
-                <div class="col-12 col-lg-2 d-flex justify-content-center gap-2">
+                <div class="col-12 col-md-12 col-lg-3 d-flex justify-content-center gap-2">
                     <button class="btn btn-dark" @click="aplicarFiltros">Filtrar</button>
                     <button class="btn btn-outline-dark" @click="resetFiltros">Reset</button>
                 </div>
