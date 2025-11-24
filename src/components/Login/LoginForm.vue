@@ -1,13 +1,13 @@
 <template>
-    <section class="card" style="width: 20rem;">
-        <div class="card-header">
-            <h3>Ingresá a tu cuenta</h3>
+    <section class="card" style="width: 22rem;">
+        <div class="card-header text-center">
+            <h4>Ingresá a tu cuenta</h4>
         </div>
 
         <div class="card-body">
 
             <form novalidate @submit.prevent="enviar">
-                <!-- campo nombre -->
+                <!-- campo usuario -->
                 <div class="form-group mb-2">
                     <label for="usuario">Usuario</label>
                     <input id="usuario" 
@@ -21,14 +21,21 @@
                     </p>
                 </div>
 
-                <!-- campo apellido -->
+                <!-- campo Contraseña -->
                 <div class="form-group">
                     <label for="password">Contraseña</label>
-                    <input id="password" 
+                    <div class="input-group">
+                        <input :type="mostrar ? 'text' : 'password'" class="form-control"
+                         id="password" aria-label="password" aria-describedby="basic-addon2"
+                        v-model.trim="formData.password"
+                        @input="formDirty.password=true">
+                        <IconEye :type="mostrar ? 'text' : 'password'" @click="mostrar = !mostrar"></IconEye>
+                    </div>
+                    <!-- <input id="password" 
                         type="password" 
                         class="form-control" 
                         v-model.trim="formData.password"
-                        @input="formDirty.password=true">
+                        @input="formDirty.password=true"> -->
                     <!-- cartel validación -->
                     <p v-if="errorPassword.mostrar" class="error-text my-1">
                         {{ errorPassword.mensaje }}
@@ -38,9 +45,9 @@
                     <button class="btn btn-primary my-3" :disabled="estadoBotonDeshabilitado()">Ingresar</button>
                 </div>
             </form>
-            <div v-if="errorAuth.mostrar" class="alert alert-danger alert-dismissible fade show" role="alert">
-                {{ errorMessage }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @click="limpiarError()"></button>
+            <div v-if="errorAuth.mostrar" class="alert alert-danger alert-dismissible fade show alert-chico" role="alert">
+                {{ errorAuth.mensaje }}
+                <button type="button" class="btn-close close-chico" data-bs-dismiss="alert" aria-label="Close" @click="limpiarError()"></button>
             </div>
         </div>
     </section>
@@ -48,12 +55,13 @@
 
 <script>
 import { useUserStore } from '@/stores/usuario';
+import IconEye from './IconEye.vue';
 
 export default {
     name: 'LoginForm', // cambiá el nombre si querés  
     
     components: {
-
+        IconEye
     },
     props: {
 
@@ -63,45 +71,47 @@ export default {
             formData: this.getIniciarData(),
             formDirty: this.getIniciarData(),
             userStore: useUserStore(),
-            errorMessage: ""
+            errorMessage: "",
+            mostrar: false
         };
     },
     // Propiedades computadas  
     computed: {
         errorUsuario() {
-      let mensaje = ''
-      let usuario = this.formData.usuario
-      if(!usuario) mensaje = 'Campo requerido'
-      else if(usuario.length < 4) mensaje = 'Debe poseer al menos 4 caracteres'
-      else if(usuario.length > 10) mensaje = 'Debe contener como máximo 10 caracteres'
-      else if(usuario.includes(' ')) mensaje = 'No se permiten espacios'
+            this.limpiarError()
+            let mensaje = ''
+            let usuario = this.formData.usuario
+            if(!usuario) mensaje = 'Campo requerido'
+            else if(usuario.length < 4) mensaje = 'Debe poseer al menos 4 caracteres'
+            else if(usuario.length > 10) mensaje = 'Debe contener como máximo 10 caracteres'
+            else if(usuario.includes(' ')) mensaje = 'No se permiten espacios'
 
-      return {
-        mensaje: mensaje,
-        mostrar: mensaje != '' && this.formDirty.usuario,
-        ok: mensaje == ''
-      }
-    },
-    errorPassword() {
-      let mensaje = ''
-      let password = this.formData.password
-      if(!password) mensaje = 'Campo requerido'
-      else if(password.includes(' ')) mensaje = 'No se permiten espacios'
-      else if(password.length < 8) mensaje = 'Debe contener 8 caracteres'
+            return {
+                mensaje: mensaje,
+                mostrar: mensaje != '' && this.formDirty.usuario,
+                ok: mensaje == ''
+            }
+        },
+        errorPassword() {
+            this.limpiarError()
+            let mensaje = ''
+            let password = this.formData.password
+            if(!password) mensaje = 'Campo requerido'
+            else if(password.includes(' ')) mensaje = 'No se permiten espacios'
+            else if(password.length < 8) mensaje = 'Debe contener 8 caracteres'
 
-      return {
-        mensaje: mensaje,
-        mostrar: mensaje != '' && this.formDirty.password,
-        ok: mensaje == ''
-      }
-    },
-    errorAuth() {
-    
-      return {
-        mensaje: this.errorMessage,
-        mostrar: this.errorMessage != '' && this.errorMessage,
-      }
-    },
+            return {
+                mensaje: mensaje,
+                mostrar: mensaje != '' && this.formDirty.password,
+                ok: mensaje == ''
+            }
+        },
+        errorAuth() {
+            return {
+                mensaje: this.errorMessage,
+                mostrar: this.errorMessage != '' && this.errorMessage,
+            }
+        },
 
     },
 
@@ -122,8 +132,8 @@ export default {
 
                 await this.userStore.login(datos.usuario, datos.password)
                 this.$router.push('/principal')
-            }catch(e){
-               this.errorMessage = e.message
+            }catch(error){
+               this.errorMessage = error.message
             }
         },
         limpiarError(){
@@ -144,8 +154,14 @@ export default {
 .error-text {
     color: #dc3545;        
     font-size: 0.85rem;
-    /* margin-top: 4px;
-    margin-bottom: 0; */
 }
 
+.alert-chico{
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+.close-chico{
+    padding-top: 1rem;
+    padding-bottom: 0.5rem;
+}
 </style>
