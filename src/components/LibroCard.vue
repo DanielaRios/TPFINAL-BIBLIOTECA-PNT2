@@ -19,7 +19,7 @@
           </div>
           <div class="row">
             <div class="col-12 d-grid">
-              <button class="btn btn-primary" @click="alquilar" :disabled="chequearStock">Alquilar</button>
+              <button class="btn btn-primary" @click="alquilar" :disabled="chequearDisponible">Alquilar</button>
             </div>  
           </div>
         </div>            
@@ -56,8 +56,8 @@ export default {
     };
   },
   computed: {
-    chequearStock() {
-      return this.stock <= 0;
+    chequearDisponible() {
+      return !this.libro.disponibilidad || this.stock <= 0   ;
     }
   },
   methods: {
