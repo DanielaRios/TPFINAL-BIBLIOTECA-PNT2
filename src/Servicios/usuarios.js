@@ -18,6 +18,17 @@ class ServicioUsuarios {
         }
     }
 
+    getById = async (id) => {
+        try {
+            const { data } = await axios.get(this.#url + id)
+            return data
+        } catch (error) {
+            console.error('Error getById', error.message)
+            throw error
+        }
+    }
+
+
     autenticacion = async (user, pass) => {
         try { 
             const { data: usuarios } = await axios.get(this.#url)
@@ -49,6 +60,18 @@ class ServicioUsuarios {
         catch (error) {
             console.error("Error en registrar", error.message)
             return { ok: false, msg: "El usuario ya existe" + error.message }
+        }
+    }
+
+
+    // actualiza usuario (PUT)
+    actualizarUsuario = async (usuario) => {
+        try {
+            const { data } = await axios.put(this.#url + usuario.id, usuario)
+            return { data }
+        } catch (error) {
+            console.error('Error actualizarUsuario', error.message)
+            throw error
         }
     }
 }

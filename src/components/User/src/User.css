@@ -2,3 +2,43 @@
   font-size: 0.9rem;
   padding: 0.4em 0.6em;
 }
+.modal-backdrop-custom {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-content-custom {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 380px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+  animation: swipeUp 0.35s ease-out;
+}
+
+
+@keyframes swipeUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+}
+
+
+
+
+

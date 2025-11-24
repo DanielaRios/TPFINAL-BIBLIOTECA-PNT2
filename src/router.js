@@ -5,7 +5,7 @@ import { createRouter, createWebHistory } from "vue-router"
 import Principal from "./components/Principal.vue"
 import Login from "./components/Login/index.vue"
 import Admin from "./components/Admin/index.vue"
-import User from "./components/User/index.vue"
+import User from "./components/User/User.vue"
 
 
 // configuro las rutas de la barra de navegación
@@ -21,6 +21,11 @@ const routes = [
     { path: '/admin', component: Admin },
     { path: '/user', component: User },
 
+    {
+      path: "/devolucion-confirmada/:titulo?",
+      name: "DevolucionConfirmada",
+      component: () => import("@/components/DevolucionConfirmada.vue")
+    },
 
     /* ---- definición de las rutas no existentes ---- */
     { path: '/:pathmatch(.*)*', redirect: '/principal' },
