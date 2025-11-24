@@ -36,19 +36,34 @@ class ServicioUsuarios {
     registrar = async (nuevoUsuario) => {
         try {
             const usuarios = await this.getAll()
-            const existe = usuarios.some(u => u.userName === nuevoUsuario.userName.trim())
+            console.log(usuarios)
 
-            if (existe) {
-                return { ok: false, msg: "El usuario ya existe" }
+            const existeUsuario = usuarios.some(u => u.userName === nuevoUsuario.userName.trim())
+            if (existeUsuario) {
+                return { ok: false, msg: "El usuario ya existe." }
             }
 
-            const { data } = await axios.post(this.#url, nuevoUsuario)
+            const existeEmail = usuarios.some(u => u.email === nuevoUsuario.email.trim())
+            if (existeEmail) {
+                return { ok: false, msg: "El email ya fue registrado." }
+            }
+
+            const existeDNI = usuarios.some(u => u.dni === nuevoUsuario.dni)
+            if (existeDNI) {
+                return { ok: false, msg: "El DNI ya tiene una cuenta." }
+            }
+
+            let datos = { ...nuevoUsuario }
+            datos.esAdmin = false
+            datos.librosAlquilados = []
+
+            const { data } = await axios.post(this.#url, datos)
 
             return { ok: true, data }
         }
         catch (error) {
             console.error("Error en registrar", error.message)
-            return { ok: false, msg: "El usuario ya existe" + error.message }
+            return { ok: false, msg: "Error al registrar el usuario." }
         }
     }
 }
