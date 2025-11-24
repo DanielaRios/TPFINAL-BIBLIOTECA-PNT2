@@ -15,7 +15,6 @@ export default {
     data() {
         return {
             pantallaActual:"login"
-
         };
     },
     // Propiedades computadas  
