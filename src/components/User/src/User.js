@@ -18,8 +18,6 @@ export default {
       usuarioActualNombre: userStore.usuario?.nombre ?? '',
       usuarioActualApellido: userStore.usuario?.apellido ?? '',
       
-
-      prestamos: [],       // Array donde guardamos los libros alquilados del usuario
       busqueda: '',        // Texto de búsqueda para filtrar por título o autor
       estadoFiltro: '',    // Filtro por estado: 'En Curso', 'Devuelto', 'Retrasado'
       page: 1,             // Página actual para paginación
@@ -36,73 +34,69 @@ export default {
   mounted() {
     // Si no hay usuario logueado, no cargamos nada
     if (!this.usuarioActualID) return;
-
-    // Inicialmente cargamos los préstamos desde el usuario logueado
-    this.prestamos = this.userStore.getUsuario?.librosAlquilados ?? [];
   },
 
-  // Observamos cambios en los préstamos del usuario para mantener la vista actualizada
-  watch: {
-    'userStore.usuario.librosAlquilados': {
-      handler(nuevosPrestamos) {
-        this.prestamos = nuevosPrestamos ?? [];
-      },
-      deep: true
-    }
-  },
 
   computed: {
-
-    //Filtrado de préstamos por búsqueda y estado
-      prestamosConEstado() {
-        return this.prestamos.map(p => {
-          const hoy = new Date();
-          const fechaPrevista = new Date(p.fechaDevolucionPrevista);
-          const fechaDevuelta = p.fechaDevolucion ? new Date(p.fechaDevolucion) : null;
-
-          let estado = "En Curso";
-
-          if (fechaDevuelta) {
-            estado = "Devuelto";
-          } else if (hoy > fechaPrevista) {
-            estado = "Retrasado";
-          }
-
-          return { ...p, estado };
-        });
-      },
-
-
-
-
-
-    // Filtrado de préstamos por búsqueda y estado
-    prestamosFiltrados() {
-      const q = this.busqueda.trim().toLowerCase();
-
-      return this.prestamosConEstado
-        // Aplicamos filtro por estado si hay seleccionado
-        .filter(p => (this.estadoFiltro ? p.estado === this.estadoFiltro : true))
-        // Aplicamos búsqueda por título o autor
-        .filter(p =>
-          p.titulo?.toLowerCase().includes(q) ||
-          p.autor?.toLowerCase().includes(q)
-        );
+    // Ordenar activos por fecha de alquiler (más reciente primero)
+    prestamosActivosOrdenados() {
+      return [...(this.userStore.usuario?.prestamosActivos ?? [])]
+        .sort((a, b) => new Date(b.fechaAlquiler) - new Date(a.fechaAlquiler));
     },
 
+    // Ordenar historial por fecha de devolución (más reciente primero)
+    historialPrestamosOrdenados() {
+      return [...(this.userStore.usuario?.historialPrestamos ?? [])]
+        .sort((a, b) => new Date(b.fechaDevolucion) - new Date(a.fechaDevolucion));
+    },
+
+    // Filtrar activos por búsqueda y estado
+    prestamosActivosFiltrados() {
+      const q = this.busqueda.trim().toLowerCase();
+      return this.prestamosActivosOrdenados.filter(p =>
+        (!this.estadoFiltro || p.estado === this.estadoFiltro) &&
+        (p.titulo?.toLowerCase().includes(q) || p.autor?.toLowerCase().includes(q))
+      );
+    },
+
+    // Filtrar historial por búsqueda y estado
+    historialPrestamosFiltrados() {
+      const q = this.busqueda.trim().toLowerCase();
+      return this.historialPrestamosOrdenados.filter(p =>
+        (!this.estadoFiltro || p.estado === this.estadoFiltro) &&
+        (p.titulo?.toLowerCase().includes(q) || p.autor?.toLowerCase().includes(q))
+      );
+    },
+
+    // Paginación sobre activos
+    prestamosActivosPaginados() {
+      const from = (this.page - 1) * this.pageSize;
+      const to = Math.min(this.page * this.pageSize, this.prestamosActivosFiltrados.length);
+      return this.prestamosActivosFiltrados.slice(from, to);
+    },
+
+    // Paginación sobre historial
+    historialPrestamosPaginados() {
+      const from = (this.page - 1) * this.pageSize;
+      const to = Math.min(this.page * this.pageSize, this.historialPrestamosFiltrados.length);
+      return this.historialPrestamosFiltrados.slice(from, to);
+    },
+
+    totalFiltrados() {
+      return this.prestamosActivosFiltrados.length + this.historialPrestamosFiltrados.length;
+    },
 
     fromIndex() {
       return (this.page - 1) * this.pageSize;
     },
 
     toIndex() {
-      return Math.min(this.page * this.pageSize, this.prestamosFiltrados.length);
-    },
-
-    prestamosPaginados() {
-      return this.prestamosFiltrados.slice(this.fromIndex, this.toIndex);
+      return Math.min(this.page * this.pageSize, this.totalFiltrados);
     }
   },
+
+
+   
 
   methods: {
     // Formateo fechas
@@ -132,64 +126,54 @@ export default {
       this.modalVisible = true;
     },
 
-    //CONFIRMAR DEVOLUCIÓN
-    confirmarDevolucion() {
-      if (!this.prestamoSeleccionado) return;
+  // CONFIRMAR DEVOLUCIÓN
+  confirmarDevolucion() {
+    if (!this.prestamoSeleccionado) return;
 
-      const fechaHoy = new Date().toISOString();
-      const idPrestamo = this.prestamoSeleccionado.id; 
-      let prestamoActualizado = null; 
-    
-      const index = this.userStore.usuario.librosAlquilados.findIndex(
-      p => p.id === idPrestamo
-    );
+    const fechaHoy = new Date().toISOString();
 
-    if (index !== -1) {
-
-    prestamoActualizado = {
-      ...this.userStore.usuario.librosAlquilados[index],
-      titulo: this.prestamoSeleccionado.titulo,
+    // Crear objeto actualizado con fecha de devolución
+    const prestamoActualizado = {
+      ...this.prestamoSeleccionado,
       fechaDevolucion: fechaHoy,
       activo: false,
       estado: "Devuelto"
     };
 
+    // Quitar de activos
+    const nuevosActivos = this.userStore.usuario.prestamosActivos.filter(
+      p => p.id !== this.prestamoSeleccionado.id
+    );
 
+    // Agregar al historial
+    const nuevoHistorial = [
+      ...this.userStore.usuario.historialPrestamos,
+      prestamoActualizado
+    ];
 
-    const nuevosPrestamos = [...this.userStore.usuario.librosAlquilados];
-    nuevosPrestamos[index] = prestamoActualizado;
-
-
-    this.userStore.servicioUsuarios.actualizarUsuario({
+    // Actualizar usuario en el store y API
+    this.userStore.actualizarUsuario({
       ...this.userStore.usuario,
-      librosAlquilados: nuevosPrestamos
+      prestamosActivos: nuevosActivos,
+      historialPrestamos: nuevoHistorial
     }).then(res => {
       this.userStore.usuario = res.data;
-    }).catch(err => console.error("Error al devolver:", err));
-    
-    //Actualizar stock en el catálogo
-    this.librosStore.devolverLibro(prestamoActualizado.libroID);
 
+      // Actualizar stock en el catálogo
+      this.librosStore.devolverLibro(prestamoActualizado.libroID);
 
-  }
+      // Guardar libro para mostrarlo en la animación de éxito
+      this.libroDevuelto = prestamoActualizado;
+      this.modalVisible = false;
 
-  // Guardamos el libro para mostrarlo en la animación de éxito
-  this.libroDevuelto = prestamoActualizado;
-  this.modalVisible = false;
-
-
-    // Redirige a la pantalla estilo "AlquilerConfirmado"
-    this.$router.push({
+      // Redirigir a la pantalla estilo "DevolucionConfirmada"
+      this.$router.push({
         name: "DevolucionConfirmada",
-        params: {
-          titulo: this.libroDevuelto.titulo
-        }
-
+        params: { titulo: this.libroDevuelto.titulo }
       });
+    }).catch(err => console.error("Error al devolver:", err));
+  },
 
-    
-
-    },
 
     cancelarDevolucion() {
       this.modalVisible = false;

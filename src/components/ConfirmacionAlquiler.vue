@@ -89,6 +89,16 @@ export default {
         return;
       }
 
+      // Verificar si el libro ya está alquilado en curso o retrasado
+      const yaAlquilado = (user.librosAlquilados || []).some(
+        l => (l.libroID ?? l.libroId) === this.libro.id && (l.estado === "En Curso" || l.estado === "Retrasado")
+      );
+
+      if (yaAlquilado) {
+        alert("Ya tenés este libro alquilado en curso o retrasado. No podés volver a alquilarlo.");
+        return;
+      }
+
 
       const nuevoPrestamo = {
         usuarioId: user.id,

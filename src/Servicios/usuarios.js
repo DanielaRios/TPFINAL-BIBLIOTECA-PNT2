@@ -1,5 +1,4 @@
 import axios from "axios"
-import { normalizeClass } from "vue"
 
 class ServicioUsuarios {
     #url = ''
@@ -77,16 +76,15 @@ class ServicioUsuarios {
             return { ok: false, msg: "Error al registrar el usuario." }
         }
     }
-
-
+    
     // actualiza usuario (PUT)
     actualizarUsuario = async (usuario) => {
         try {
-            const { data } = await axios.put(this.#url + usuario.id, usuario)
-            return { data }
+            const { data } = await axios.put(this.#url + usuario.id, usuario);
+            return { ok: true, data };
         } catch (error) {
-            console.error('Error actualizarUsuario', error.message)
-            throw error
+            console.error('Error actualizarUsuario', error.message);
+            return { ok: false, msg: "Error al actualizar el usuario." };
         }
     }
 
