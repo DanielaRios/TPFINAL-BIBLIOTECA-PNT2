@@ -73,7 +73,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="usuario in usuariosFiltrados" :key="usuario.id">
+                    <tr v-for="usuario in usuariosPaginados" :key="usuario.id">
                         <td class="text-center">{{ usuario.id }}</td>
                         <td><b>{{ usuario.nombre }}</b></td>
                         <td><b>{{ usuario.apellido }}</b></td>
@@ -108,6 +108,26 @@
                     </tr>
                 </tbody>
             </table>
+            <!-- Paginación Usuarios -->
+            <div class="d-flex justify-content-between align-items-center mt-3" v-if="totalUsuariosFiltrados > 0">
+                <small class="text-muted">
+                    Mostrando {{ indiceInicioUsuarios }} a {{ indiceFinUsuarios }}
+                    de {{ totalUsuariosFiltrados }} resultados
+                </small>
+
+                <div>
+                    <button class="btn btn-outline-secondary btn-sm me-2" @click="paginaAnteriorUsuarios"
+                        :disabled="paginaActualUsuarios === 1">
+                        Anterior
+                    </button>
+
+                    <button class="btn btn-outline-secondary btn-sm" @click="paginaSiguienteUsuarios"
+                        :disabled="paginaActualUsuarios === totalPaginasUsuarios">
+                        Siguiente
+                    </button>
+                </div>
+            </div>
+
 
             <!-- Modal Editar Usuario -->
             <AdminEditarUsuario ref="modalEditarUsuario" @usuario-editado="actualizarUsuarioEditado" />
@@ -140,6 +160,9 @@ export default {
 
             filtroTexto: "",
             filtroPrestamos: "Todos", // 'Todos' | 'ConActivos' | 'SinActivos'
+
+            paginaActualUsuarios: 1, // para paginación
+            itemsPorPaginaUsuarios: 6,
         };
     },
 
@@ -191,6 +214,33 @@ export default {
 
                 return true;
             });
+        },
+
+        // Paginación usuarios
+        totalUsuariosFiltrados() {
+            return this.usuariosFiltrados.length;
+        },
+
+        totalPaginasUsuarios() {
+            return Math.ceil(this.totalUsuariosFiltrados / this.itemsPorPaginaUsuarios) || 1;
+        },
+
+        indiceInicioUsuarios() {
+            if (this.totalUsuariosFiltrados === 0) return 0;
+            return (this.paginaActualUsuarios - 1) * this.itemsPorPaginaUsuarios + 1;
+        },
+
+        indiceFinUsuarios() {
+            return Math.min(
+                this.paginaActualUsuarios * this.itemsPorPaginaUsuarios,
+                this.totalUsuariosFiltrados
+            );
+        },
+
+        usuariosPaginados() {
+            const inicio = (this.paginaActualUsuarios - 1) * this.itemsPorPaginaUsuarios;
+            const fin = inicio + this.itemsPorPaginaUsuarios;
+            return this.usuariosFiltrados.slice(inicio, fin);
         },
     },
 
@@ -267,6 +317,19 @@ export default {
         verPrestamos(usuario) {
             if (this.$refs.modalPrestamosUsuario) {
                 this.$refs.modalPrestamosUsuario.cargarPrestamos(usuario);
+            }
+        },
+
+        //PAGINACION USUARIOS
+        paginaAnteriorUsuarios() {
+            if (this.paginaActualUsuarios > 1) {
+                this.paginaActualUsuarios--;
+            }
+        },
+
+        paginaSiguienteUsuarios() {
+            if (this.paginaActualUsuarios < this.totalPaginasUsuarios) {
+                this.paginaActualUsuarios++;
             }
         },
 

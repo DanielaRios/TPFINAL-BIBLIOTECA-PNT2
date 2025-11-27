@@ -35,6 +35,9 @@ export default {
             filtroEstado: 'Todos',
             vistaActiva: 'libros', // o 'usuarios' para Nav-underline
 
+            paginaActualLibros: 1,          // paginación libros
+            itemsPorPaginaLibros: 6,
+
 
         };
     },
@@ -45,6 +48,34 @@ export default {
         },
         filtroEstadoMostrar() {
             return this.filtroEstado;
+        },
+
+        // PAGINACIÓN LIBROS
+        totalLibrosFiltrados() {
+            return this.librosFiltrados.length;
+        },
+
+        totalPaginasLibros() {
+            return Math.ceil(this.totalLibrosFiltrados / this.itemsPorPaginaLibros) || 1;
+        },
+
+        indiceInicioLibros() {
+            if (this.totalLibrosFiltrados === 0) return 0;
+            return (this.paginaActualLibros - 1) * this.itemsPorPaginaLibros + 1;
+        },
+
+        indiceFinLibros() {
+            return Math.min(
+                this.paginaActualLibros * this.itemsPorPaginaLibros,
+                this.totalLibrosFiltrados
+            );
+        },
+
+        // lista que vas a usar en el v-for de la tabla
+        librosPaginados() {
+            const inicio = (this.paginaActualLibros - 1) * this.itemsPorPaginaLibros;
+            const fin = inicio + this.itemsPorPaginaLibros;
+            return this.librosFiltrados.slice(inicio, fin);
         },
     },
 
@@ -155,6 +186,18 @@ export default {
             }
         },
 
+        // PAGINACIÓN LIBROS
+        paginaAnteriorLibros() {
+            if (this.paginaActualLibros > 1) {
+                this.paginaActualLibros--;
+            }
+        },
+
+        paginaSiguienteLibros() {
+            if (this.paginaActualLibros < this.totalPaginasLibros) {
+                this.paginaActualLibros++;
+            }
+        },
     },
 
     mounted() {
