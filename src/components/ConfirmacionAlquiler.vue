@@ -82,7 +82,7 @@ export default {
 
     
       const activos = (user.librosAlquilados || []).filter(l => l.activo && l.estado === "En Curso").length
-
+      console.log(activos)
       
       if (activos >= 15) {
         alert("No podés alquilar más de 15 libros activos.");
@@ -115,11 +115,11 @@ export default {
       const librosActualizados = [...(user.librosAlquilados || []), nuevoPrestamo];
 
       try {
-        const res = await this.userStore.servicioUsuarios.actualizarUsuario({
+        const res = await this.userStore.actualizarUsuario({
           ...user,
           librosAlquilados: librosActualizados
         });
-        this.userStore.usuario = res.data;
+        
 
         await this.librosStore.actualizarStock(this.libro.id, this.libro.stock - 1);
 

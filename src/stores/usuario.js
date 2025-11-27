@@ -82,6 +82,7 @@ export const useUserStore = defineStore('usuario', {
             ...usuarioActualizado,
             librosAlquilados: librosAlquiladosLimpios
         });
+        this.usuario = res
 
         const activos = (res.data.librosAlquilados ?? [])
             .filter(p => p.activo)

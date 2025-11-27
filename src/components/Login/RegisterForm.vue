@@ -223,8 +223,9 @@ export default {
             return mensaje
         },
         validarEmail(mail){
+            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
             let mensaje = ''
-            if(!mail.includes("@")) mensaje = "Debe contener @"
+            if(!regex.test(mail)) mensaje = 'Debe ser un email válido'
             return mensaje
         },
         validarDNI(dni){
