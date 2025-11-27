@@ -30,13 +30,13 @@ class ServicioUsuarios {
 
 
     autenticacion = async (user, pass) => {
-        try { 
+        try {
             const { data: usuarios } = await axios.get(this.#url)
             const userData = usuarios.find(
                 u => u.userName === user.trim() && u.password === pass
-             )
+            )
 
-            return  userData ?? null
+            return userData ?? null
         }
         catch (error) {
             console.error('Error en autenticacion', error.message)
@@ -89,6 +89,18 @@ class ServicioUsuarios {
             throw error
         }
     }
+
+    // NUEVO: eliminar usuario (DELETE)
+    delete = async (id) => {
+        try {
+            const { data: usuarioEliminado } = await axios.delete(this.#url + id)
+            return usuarioEliminado
+        } catch (error) {
+            console.error('Error usuario DELETE', error.message)
+            throw error
+        }
+    }
+
 }
 
 export default ServicioUsuarios

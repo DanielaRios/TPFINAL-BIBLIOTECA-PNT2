@@ -12,12 +12,6 @@
 
 
 /* ---- Encabezado oscuro  tabla ---- */
-.panel-libros-header {
-  background-color: #a64d79; 
-  color: white;
-  padding: 10px 20px;
-  border-radius: 8px 8px 0 0;
-}
 .tabla-libros thead {
   background-color: #1A1F2E;
 }
@@ -42,9 +36,19 @@
 
  /*------------------------------------------------------*/
 /* ---- Nav-underline Admin ---- */
+
+/*Color fondo Nav underline */
+.panel-libros-header {
+  background-color: #1A1F2E; 
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px 8px 0 0;
+}
+
+
 /* Nav personalizado del Admin */
 .admin-tabs .nav-link {
-    color: #464646;           /* texto blanco */
+    color: #5a5959;           /* texto blanco */
     font-size: 1.35rem;                 /* tamaño más grande */
     font-weight: 600;                  /* semi bold */
     padding-bottom: 8px;               /* más espacio para el underline */
@@ -52,7 +56,7 @@
 
 /* Hover */
 .admin-tabs .nav-link:hover {
-    color: #464646;         /* color al pasar el mouse */
+    color: #5a5959;         /* color al pasar el mouse */
 }
 
 /* Estado activo */
