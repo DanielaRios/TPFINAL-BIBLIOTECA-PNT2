@@ -1,0 +1,14 @@
+.back{
+    background-color: #1A1F2E;
+    width: 100vw;   
+    height: 100vh;
+    color:white
+}
+
+.centrar{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+

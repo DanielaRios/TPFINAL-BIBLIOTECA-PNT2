@@ -1,9 +1,205 @@
+<section class="container py-4">
+  <h4 class="mb-2 text-muted">
+    {{ usuarioActualNombre }} {{ usuarioActualApellido }}
+  </h4>
+  <h2 class="mb-4">Mi Historial de Préstamos</h2>
 
-   <section class="card">
-    <div class="card-header">
-        <h3>Componente Usuario</h3>
+  <!-- Filtros -->
+  <div class="d-flex justify-content-between mb-3">
+    <input
+      v-model="busqueda"
+      type="text"
+      class="form-control w-50"
+      placeholder="Buscar por título o autor"
+    />
+
+    <div class="btn-group ms-3" role="group">
+      <button
+        type="button"
+        class="btn rounded-pill px-3"
+        :class="estadoFiltro === '' ? 'btn-dark text-white' : 'btn-outline-dark'"
+        @click="estadoFiltro = ''"
+      >
+        Todos
+      </button>
+      <button
+        type="button"
+        class="btn rounded-pill px-3"
+        :class="estadoFiltro === 'En Curso' ? 'btn-warning text-dark' : 'btn-outline-warning'"
+        @click="estadoFiltro = 'En Curso'"
+      >
+        En Curso
+      </button>
+      <button
+        type="button"
+        class="btn rounded-pill px-3"
+        :class="estadoFiltro === 'Devuelto' ? 'btn-success text-white' : 'btn-outline-success'"
+        @click="estadoFiltro = 'Devuelto'"
+      >
+        Devuelto
+      </button>
+      <button
+        type="button"
+        class="btn rounded-pill px-3"
+        :class="estadoFiltro === 'Retrasado' ? 'btn-danger text-white' : 'btn-outline-danger'"
+        @click="estadoFiltro = 'Retrasado'"
+      >
+        Retrasado
+      </button>
     </div>
+  </div>
 
-    </section>
+  <!-- Tabla de Activos -->
+  <h3 class="mt-4">Préstamos Activos</h3>
+  <table class="table table-bordered table-hover" v-if="prestamosActivosPaginados.length">
+    <thead class="table-dark">
+      <tr>
+        <th>Imagen</th>
+        <th>Título</th>
+        <th>Autor</th>
+        <th>Fecha de Alquiler</th>
+        <th>Estado</th>
+        <th>Acción</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="p in prestamosActivosPaginados" :key="p.id">
+        <td>
+          <img
+            :src="p.foto"
+            alt="Portada"
+            class="rounded"
+            style="width: 60px; height: 90px; object-fit: cover;"
+            @error="imagenError($event)"
+          />
+        </td>
+        <td>{{ p.titulo }}</td>
+        <td>{{ p.autor }}</td>
+        <td>{{ formatDate(p.fechaAlquiler) }}</td>
+        <td>
+          <span
+            :class="[
+              'badge',
+              p.estado === 'En Curso'
+                ? 'bg-warning text-dark'
+                : 'bg-danger'
+            ]"
+          >
+            {{ p.estado }}
+          </span>
+        </td>
+        <td>
+          <button
+            class="btn btn-sm btn-outline-danger rounded-pill me-1"
+            @click="abrirModalDevolucion(p)"
+          >
+            Devolver Libro
+          </button>
+          <button
+            class="btn btn-sm btn-outline-primary rounded-pill"
+            @click="verDetalles(p)"
+          >
+            Ver Detalles
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div v-else class="text-muted">No hay préstamos activos</div>
 
+  <!-- Tabla de Historial -->
+  <h3 class="mt-5">Historial de Préstamos</h3>
+  <table class="table table-bordered table-hover" v-if="historialPrestamosPaginados.length">
+    <thead class="table-dark">
+      <tr>
+        <th>Imagen</th>
+        <th>Título</th>
+        <th>Autor</th>
+        <th>Fecha de Alquiler</th>
+        <th>Fecha de Devolución</th>
+        <th>Estado</th>
+        <th>Acción</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="p in historialPrestamosPaginados" :key="p.id">
+        <td>
+          <img
+            :src="p.foto"
+            alt="Portada"
+            class="rounded"
+            style="width: 60px; height: 90px; object-fit: cover;"
+            @error="imagenError($event)"
+          />
+        </td>
+        <td>{{ p.titulo }}</td>
+        <td>{{ p.autor }}</td>
+        <td>{{ formatDate(p.fechaAlquiler) }}</td>
+        <td>{{ formatDate(p.fechaDevolucion) }}</td>
+        <td>
+          <span class="badge bg-success">Devuelto</span>
+        </td>
+        <td>
+          <button
+            class="btn btn-sm btn-outline-success rounded-pill me-1"
+            @click="renovar(p)"
+          >
+            Renovar Préstamo
+          </button>
+          <button
+            class="btn btn-sm btn-outline-primary rounded-pill"
+            @click="verDetalles(p)"
+          >
+            Ver Detalles
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div v-else class="text-muted">No hay préstamos devueltos</div>
 
+  <!-- Paginación -->
+  <div class="d-flex justify-content-between align-items-center mt-3">
+    <div>
+      Mostrando {{ fromIndex + 1 }} a {{ toIndex }} de {{ prestamosActivosFiltrados.length + historialPrestamosFiltrados.length }} resultados
+    </div>
+    <div>
+      <button
+        class="btn btn-outline-secondary btn-sm rounded-pill me-2"
+        :disabled="page === 1"
+        @click="page--"
+      >
+        Anterior
+      </button>
+      <button
+        class="btn btn-outline-secondary btn-sm rounded-pill"
+        :disabled="toIndex >= (prestamosActivosFiltrados.length + historialPrestamosFiltrados.length)"
+        @click="page++"
+      >
+        Siguiente
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL DE DEVOLUCIÓN -->
+  <div v-if="modalVisible" class="modal-backdrop-custom">
+    <div class="modal-content-custom">
+      <h3 class="mb-3">¿Estás seguro de que quieres devolver este libro?</h3>
+      <div v-if="prestamoSeleccionado">
+        <img
+          :src="prestamoSeleccionado.foto"
+          class="rounded mb-3"
+          style="width: 80px; height: 110px; object-fit: cover;"
+        />
+        <p><strong>{{ prestamoSeleccionado.titulo }}</strong></p>
+        <p>{{ prestamoSeleccionado.autor }}</p>
+        <p>Alquilado: {{ formatDate(prestamoSeleccionado.fechaAlquiler) }}</p>
+        <p>Previsto para devolver: {{ formatDate(prestamoSeleccionado.fechaDevolucionPrevista) }}</p>
+      </div>
+      <div class="d-flex justify-content-end mt-3">
+        <button class="btn btn-secondary me-2" @click="cancelarDevolucion">Cancelar</button>
+        <button class="btn btn-danger" @click="confirmarDevolucion">Confirmar Devolución</button>
+      </div>
+    </div>
+  </div>
+</section>

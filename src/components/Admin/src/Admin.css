@@ -1,0 +1,69 @@
+/* ---- header ---- */
+
+/* Botón "Nuevo Libro" al 50% del ancho del buscador */
+.btn-nuevo-libro {
+  background-color: #1A1F2E;
+  color: white;
+  width: auto;      /* se ajusta al texto */
+  padding: 0.6rem 1.5rem; /* controlás el tamaño */
+  border-radius: 6px;
+  display: inline-block;
+}
+
+
+/* ---- Encabezado oscuro  tabla ---- */
+.tabla-libros thead {
+  background-color: #1A1F2E;
+}
+
+.tabla-libros thead th {
+  background-color: #1A1F2E;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+
+/* Filas del cuerpo en gris claro */
+.tabla-libros tbody td {
+  background-color: #f0f4f7;
+}
+
+/* Botón eliminar personalizado */
+.btn-color-eliminar {
+  background-color: #a64d79; 
+  color: white;
+}
+
+ /*------------------------------------------------------*/
+/* ---- Nav-underline Admin ---- */
+
+/*Color fondo Nav underline */
+.panel-libros-header {
+  background-color: #1A1F2E; 
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px 8px 0 0;
+}
+
+
+/* Nav personalizado del Admin */
+.admin-tabs .nav-link {
+    color: #5a5959;           /* texto blanco */
+    font-size: 1.35rem;                 /* tamaño más grande */
+    font-weight: 600;                  /* semi bold */
+    padding-bottom: 8px;               /* más espacio para el underline */
+}
+
+/* Hover */
+.admin-tabs .nav-link:hover {
+    color: #5a5959;         /* color al pasar el mouse */
+}
+
+/* Estado activo */
+.admin-tabs .nav-link.active {
+    color: #ffffff;         
+    border-bottom: 3px solid #ffffff;  /* subrayado blanco */
+}
+
+
+

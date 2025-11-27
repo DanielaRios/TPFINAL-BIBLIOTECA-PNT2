@@ -1,7 +1,136 @@
+<!-- <div class="container-fluid px-5 py-4"> -->
+<section class="container py-4">
+    <div class="card-header panel-libros-header">
+        <header>
+            <!-- Nabs & tabs - Nav-underline -->
+            <ul class="nav nav-underline mb-4 admin-tabs">
+                <li class="nav-item">
+                    <a class="nav-link" :class="{ active: vistaActiva === 'libros' }" href="#"
+                        @click.prevent="cambiarVista('libros')">
+                        Panel Libros
+                    </a>
+                </li>
 
-   <section class="card">
-    <div class="card-header">
-        <h3>Componente Admin</h3>
+                <li class="nav-item">
+                    <a class="nav-link" :class="{ active: vistaActiva === 'usuarios' }" href="#"
+                        @click.prevent="cambiarVista('usuarios')">
+                        Panel Usuarios
+                    </a>
+                </li>
+            </ul>
+        </header>
     </div>
+    <!-- VISTA LIBROS PARA ADMIN -->
+    <div v-if="vistaActiva === 'libros'">
+        <div class="card-body">
+            <!-- Componente FiltroLibros -->
+            <FiltroLibros @filtrar="aplicarFiltros" @reset="resetFiltros" @cambio-texto="filtrarPorTexto" />
 
-    </section>
+            <!-- Título y botón Nuevo Libro -->
+            <div class="d-flex justify-content-between align-items-center">
+                <h1>Lista de Libros</h1>
+                <button class="btn btn-nuevo-libro btn-lg px-4" data-bs-toggle="modal"
+                    data-bs-target="#modalNuevoLibro">
+                    Nuevo Libro
+                </button>
+
+            </div>
+            <hr />
+
+            <!-- Si MockAPI no trajo Libros -->
+            <div v-if="libros.length === 0">
+                <h4 class="alert alert-secondary">Cargando libros desde MockAPI...</h4>
+            </div>
+
+            <!-- Cuando MockAPI ya cargo Libros -->
+            <div v-else>
+                <!-- Si el filtro dejó 0 resultados -->
+                <div v-if="librosFiltrados.length === 0" class="alert alert-secondary text-center mt-3">
+                    No se encontro ningún libro
+                </div>
+                <!-- Tabla de libros -->
+                <div v-else>
+                    <div class="table-responsive">
+                        <table class="table tabla-libros align-middle">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#ID</th>
+                                    <th>TITULO</th>
+                                    <th>AUTOR</th>
+                                    <th>CATEGORÍA</th>
+                                    <th class="text-center">AÑO</th>
+                                    <th class="text-center">STOCK</th>
+                                    <th class="text-center">DISPONIBLE</th>
+                                    <th>FOTO</th>
+                                    <th>ACCIONES</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(libro, index) in librosPaginados" :key="libro.id">
+                                    <td class="text-center">{{ libro.id }}</td>
+                                    <td><b>{{ libro.titulo }}</b></td>
+                                    <td><b>{{ libro.autor }}</b></td>
+                                    <td>{{ libro.categoria }}</td>
+                                    <td class="text-center">{{ libro.anio }}</td>
+                                    <td class="text-center">{{ libro.stock }}</td>
+                                    <td class="text-center">
+                                        {{ libro.disponibilidad ? 'Sí' : 'No' }}
+                                    </td>
+                                    <td>
+                                        <img :src="libro.foto" alt="Portada"
+                                            style="width: 40px; height: 60px; object-fit: cover" />
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-dark my-1 me-2" data-bs-toggle="modal"
+                                            data-bs-target="#modalEditarLibro" @click="editarLibro(libro)">
+                                            Editar
+                                        </button>
+                                        <button class=" btn btn-color-eliminar my-1 me-2"
+                                            @click="eliminarLibro(libro.id)">
+                                            Eliminar
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Paginación -->
+                        <div class="d-flex justify-content-between align-items-center mt-3"
+                            v-if="totalLibrosFiltrados > 0">
+                            <small class="text-muted">
+                                Mostrando {{ indiceInicioLibros }} a {{ indiceFinLibros }}
+                                de {{ totalLibrosFiltrados }} resultados
+                            </small>
+
+                            <div>
+                                <button class="btn btn-outline-secondary btn-sm me-2" @click="paginaAnteriorLibros"
+                                    :disabled="paginaActualLibros === 1">
+                                    Anterior
+                                </button>
+
+                                <button class="btn btn-outline-secondary btn-sm" @click="paginaSiguienteLibros"
+                                    :disabled="paginaActualLibros === totalPaginasLibros">
+                                    Siguiente
+                                </button>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- VISTA USUARIOS PARA ADMIN -->
+    <div v-else-if="vistaActiva === 'usuarios'">
+        <AdminUsers :key="vistaActiva" /> <!-- usamos key para refrescar el componente -->
+    </div>
+    <!-- Modal Nuevo Libro -->
+    <AdminNuevoLibro :categorias="categorias" @libro-creado="agregarLibro" />
+
+    <!-- Modal Editar Libro -->
+    <AdminEditarLibro ref="modalEditar" :categorias="categorias" @libro-editado="actualizarLibroEditado" />
+
+</section>
+<!-- </div> -->

@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar navbar-expand-md mb-1">
+    <nav class="navbar navbar-expand-md">
         <!-- Maneja el tamaño y color de la barra de navegación -->
         <div class="container-fluid">
             <RouterLink class="navbar-brand" to="/">Biblioteca - Lectia </RouterLink>
@@ -11,20 +11,23 @@
             </button>
 
             <!-- Items de navegación - opciones -->
-            <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
 
                     <li class="nav-item">
-                        <RouterLink class="nav-link" to="/principal">Principal</RouterLink>
+                        <RouterLink class="nav-link" to="/principal">Catálogo</RouterLink>
                     </li>
-                    <li class="nav-item">
+                    <li v-if="!userStore.getLogeado" class="nav-item">
                         <RouterLink class="nav-link" to="/login">Login</RouterLink>
                     </li>
-                    <li class="nav-item">
+                    <li v-if="userStore.getAdmin" class="nav-item">
                         <RouterLink class="nav-link" to="/admin">Admin</RouterLink>
                     </li>
-                    <li class="nav-item">
+                    <li v-if="userStore.getLogeado && !userStore.getAdmin" class="nav-item">
                         <RouterLink class="nav-link" to="/user">Usuario</RouterLink>
+                    </li>
+                    <li v-if="userStore.getLogeado" class="nav-item">
+                        <button class="nav-link btn btn-link" @click="deslogear()">Logout</button>
                     </li>
 
                 </ul>
@@ -34,6 +37,8 @@
 </template>
 
 <script>
+import { useUserStore } from '@/stores/usuario';
+
 export default {
     name: 'Navbar', // cambiá el nombre si querés
 
@@ -50,6 +55,8 @@ export default {
     // Estado local
     data() {
         return {
+            userStore: useUserStore(),
+            user: null
         };
     },
 
@@ -65,7 +72,10 @@ export default {
 
     // Métodos
     methods: {
-        // ejemplo: incrementar() { this.contador++; }
+       deslogear() {
+            this.userStore.logout()
+            this.$router.push('/principal')
+        }
     },
 
     // Ciclo de vida
