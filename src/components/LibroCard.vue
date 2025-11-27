@@ -94,7 +94,8 @@ export default {
         fechaAlquiler: new Date().toISOString().split('T')[0],
         fechaDevolucionPrevista: new Date(Date.now() + 15*24*60*60*1000).toISOString().split('T')[0],
         fechaDevolucion: null,
-        activo: true
+        activo: true,
+        estado: "En Curso"
       };
 
       const librosActualizados = [...(user.librosAlquilados || []), nuevoPrestamo];
@@ -105,7 +106,7 @@ export default {
           ...user,
           librosAlquilados: librosActualizados
         });
-        this.userStore.usuario = res.data;
+        
 
         // Reducimos stock en API y store
         await this.librosStore.actualizarStock(this.libro.id, this.stock - 1);

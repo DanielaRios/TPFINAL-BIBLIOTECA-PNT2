@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import ServicioLibros from '@/Servicios/libros';
+import { useUserStore } from '@/stores/usuario';
 
 export const useLibrosStore = defineStore('libros', {
   state: () => ({
@@ -36,21 +37,60 @@ export const useLibrosStore = defineStore('libros', {
     },
 
     async devolverLibro(id) {
-    const libro = this.lista.find(l => l.id === id);
-    if (libro) {
-    // Incrementar stock local
-    libro.stock += 1;
+      const libro = this.lista.find(l => l.id === id);
+      if (libro) {
+        // Incrementar stock local
+        libro.stock += 1;
 
-    try {
-      // Actualizar en la API
-      await this.servicioLibros.update(id, { ...libro, stock: libro.stock });
-    } catch (error) {
-      console.error("Error al devolver libro en la API:", error);
+        try {
+          // Actualizar stock en la API de libros
+          await this.servicioLibros.update(id, { ...libro, stock: libro.stock });
+
+          // 🔑 Actualizar el préstamo en el usuario
+          const userStore = useUserStore();
+          const user = userStore.usuario;
+
+          const prestamosActualizados = (user.librosAlquilados || []).map(p => {
+            if (p.libroID === id && p.activo) {
+              return {
+                ...p,
+                activo: false,
+                fechaDevolucion: new Date().toISOString(),
+                estado: "Devuelto"
+              };
+            }
+            return p;
+          });
+
+          // Guardar cambios en la API de usuarios
+          const res = await userStore.servicioUsuarios.actualizarUsuario({
+            ...user,
+            librosAlquilados: prestamosActualizados
+          });
+
+          // Refrescar usuario en el store
+          const activos = (res.data.librosAlquilados ?? [])
+            .filter(p => p.activo)
+            .map(userStore.normalizarPrestamo);
+
+          const historial = (res.data.librosAlquilados ?? [])
+            .filter(p => !p.activo)
+            .map(userStore.normalizarPrestamo);
+
+          userStore.usuario = {
+            ...res.data,
+            prestamosActivos: activos,
+            historialPrestamos: historial
+        };
+
+        } catch (error) {
+          console.error("Error al devolver libro en la API:", error);
+        }
+      } else {
+        console.warn(`No se encontró el libro con id ${id}`);
+      }
     }
-    } else {
-    console.warn(`No se encontró el libro con id ${id}`);
-  }
-}
+
 
 
 
