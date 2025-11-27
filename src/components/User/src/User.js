@@ -157,7 +157,7 @@ export default {
       prestamosActivos: nuevosActivos,
       historialPrestamos: nuevoHistorial
     }).then(res => {
-      this.userStore.usuario = res.data;
+      
 
       // Actualizar stock en el catálogo
       this.librosStore.devolverLibro(prestamoActualizado.libroID);
