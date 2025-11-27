@@ -215,8 +215,8 @@ export default {
         },
         validarPassword(pass){
             let mensaje = ''
-            let tieneNumero = /\d/.test(pass) //chequea que tenga algun numero entre 0 yu 9
-            if(pass.length < 7) mensaje ="Debe contener al menos 8 caracteres"
+            let tieneNumero = /\d/.test(pass) 
+            if(pass.length < 8) mensaje ="Debe contener al menos 8 caracteres"
             else if(!tieneNumero) mensaje = "Debe contener algun numero"
             else if(pass.includes(" ")) mensaje = "No debe tener espacios"
 

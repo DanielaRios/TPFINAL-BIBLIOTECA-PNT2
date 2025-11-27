@@ -144,13 +144,13 @@ export default {
     const nuevosActivos = this.userStore.usuario.prestamosActivos.filter(
       p => p.id !== this.prestamoSeleccionado.id
     );
-
+    console.log(nuevosActivos)
     // Agregar al historial
     const nuevoHistorial = [
       ...this.userStore.usuario.historialPrestamos,
       prestamoActualizado
     ];
-
+    console.log(nuevoHistorial)
     // Actualizar usuario en el store y API
     this.userStore.actualizarUsuario({
       ...this.userStore.usuario,
@@ -173,12 +173,10 @@ export default {
       });
     }).catch(err => console.error("Error al devolver:", err));
   },
-
-
-    cancelarDevolucion() {
-      this.modalVisible = false;
-      this.prestamoSeleccionado = null;
-    }
+  cancelarDevolucion() {
+    this.modalVisible = false;
+    this.prestamoSeleccionado = null;
+  }
 
 
   }
