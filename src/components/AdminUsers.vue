@@ -12,7 +12,7 @@
 
                 <!-- Filtro por préstamos -->
                 <div class="col-6 col-md-6 col-lg-2">
-                    <label class="form-label fs-5"><strong>Préstamos</strong></label>
+                    <label class="form-label fs-5"><strong>Prestamos</strong></label>
                     <div class="dropdown filtro-dropdown">
                         <button class="btn btn-dark dropdown-toggle w-100" type="button" data-bs-toggle="dropdown">
                             {{ filtroPrestamosMostrar }}
@@ -79,7 +79,7 @@
                         <td><b>{{ usuario.apellido }}</b></td>
                         <td> {{ usuario.dni }} </td>
                         <td> {{ usuario.userName }}</td>
-                        
+
                         <td class="text-center">{{ "•".repeat(usuario.password.length) }}</td>
                         <td class="text-center">{{ usuario.email }}</td>
                         <!-- Contamos préstamos desde librosAlquilados -->
@@ -87,11 +87,12 @@
                             {{ contarPrestamosActivos(usuario) }}
                         </td>
                         <td>
-                            <!-- Botón todavía sin funcionalidad -->
-                            <button class="btn btn-dark my-1 me-2" disabled>
+                            <button class="btn btn-dark my-1 me-2" data-bs-toggle="modal"
+                                data-bs-target="#modalPrestamosUsuario" @click="verPrestamos(usuario)">
                                 Prestamos
                             </button>
                         </td>
+
                         <td>
                             <button class="btn btn-dark my-1 me-2" data-bs-toggle="modal"
                                 data-bs-target="#modalEditarUsuario" @click="editarUsuario(usuario)">
@@ -111,6 +112,9 @@
             <!-- Modal Editar Usuario -->
             <AdminEditarUsuario ref="modalEditarUsuario" @usuario-editado="actualizarUsuarioEditado" />
 
+            <!-- Modal Prestamos Usuario -->
+            <AdminPrestamoUsuario ref="modalPrestamosUsuario" />
+
         </div>
     </div>
 </template>
@@ -118,6 +122,7 @@
 <script>
 import ServicioUsuarios from "@/Servicios/usuarios";
 import AdminEditarUsuario from "@/components/AdminEditarUsuario.vue";
+import AdminPrestamoUsuario from "@/components/AdminPrestamoUsuario.vue";
 
 
 export default {
@@ -125,6 +130,7 @@ export default {
 
     components: {
         AdminEditarUsuario,
+        AdminPrestamoUsuario,
     },
 
     data() {
@@ -256,6 +262,14 @@ export default {
                 this.usuarios.splice(index, 1, usuarioActualizado);
             }
         },
+
+        // VER PRESTAMOS USUARIO- boton Prestamos
+        verPrestamos(usuario) {
+            if (this.$refs.modalPrestamosUsuario) {
+                this.$refs.modalPrestamosUsuario.cargarPrestamos(usuario);
+            }
+        },
+
 
     },
 
